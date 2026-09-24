@@ -49,3 +49,4 @@ docs/PROJECT-STATUS-v4.1.md
 لتوضيح ما تم تجهيزه فعليًا وما لم يتم ادعاء إتمامه.
 ⚠️ نقطة مهمة جدًا
 أنا لم أضع package-lock.json وهميًا ولم أكتب أن الـ Production Build ناجح بدون تشغيله فعليًا في بيئة Node 24+/npm 11+ مناسبة. لذلك النسخة جاهزة للمسار الحقيقي، لكن خطوة الـ lockfile والـ build verification ما زالت Gate فعلية وليست ادعاءً.
+fix(ci): repair production build and deployment workflow
