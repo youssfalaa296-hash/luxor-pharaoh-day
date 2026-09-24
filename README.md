@@ -1,4 +1,4 @@
-داخل الـ ZIP يوجد 50 ملفًا تشمل:
+ داخل الـ ZIP يوجد 50 ملفًا تشمل:
 واجهة Next.js حديثة Mobile-First.
 Arabic RTL + English LTR.
 الهوية البصرية LUXOR PHARAOH DAY.
