@@ -1,24 +1,3 @@
-import type { Metadata } from 'next';
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Analytics } from '@vercel/analytics/next';
-
-export const metadata: Metadata = {
-  title: 'LUXOR PHARAOH DAY 🏺👑',
-  description: 'أبرز تجربة اليوم الفرعوني في الأقصر - A Day in Luxor with the Pharaohs',
-};
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="ar">
-      <body>
-        {children}
-        <SpeedInsights />
-        <Analytics />
-      </body>
-    </html>
-  );
-}
+import type {Metadata} from 'next'; import {SpeedInsights} from '@vercel/speed-insights/next'; import {Analytics} from '@vercel/analytics/next'; import SiteNav from '@/components/SiteNav'; import './globals.css';
+export const metadata:Metadata={title:{default:'LUXOR PHARAOH DAY 🏺👑',template:'%s · LUXOR PHARAOH DAY'},description:'منصة رقمية مستقلة ثنائية اللغة تساعد زوار الأقصر على أن يعرفوا، يتأكدوا، ثم يتحركوا بثقة.',metadataBase:new URL(process.env.NEXT_PUBLIC_SITE_URL||'https://luxor-pharaoh-day-q3rd.vercel.app')};
+export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="ar" dir="rtl"><body><SiteNav/>{children}<footer className="footer"><div className="wrap">LUXOR PHARAOH DAY 🏺👑 · KNOW • CHECK • GO<br/>منصة مستقلة للمعلومات والتخطيط — لا تمثل جهة حكومية.</div></footer><SpeedInsights/><Analytics/></body></html>}
