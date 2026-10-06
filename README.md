@@ -993,7 +993,7 @@ Deployment Commit Matching
 Release Acceptance
         ↓
 Release Reviewer Approval
-        ↓
+        ↓ 
 VERIFIED
         ↓
 Android / iOS Release Track
