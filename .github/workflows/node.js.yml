@@ -1,4 +1,5 @@
 name: LUXOR PHARAOH DAY — Node.js CI
+# Production verification pipeline — Node 24.21.0 / npm 11.19.0
 
 on:
   push:
