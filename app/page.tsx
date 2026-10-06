@@ -1,9 +1,2 @@
-export default function Home() {
-  return (
-    <main>
-      <h1>LUXOR PHARAOH DAY 🏺👑</h1>
-      <p>أبرز تجربة اليوم الفرعوني في الأقصر</p>
-      <p>A Day in Luxor with the Pharaohs</p>
-    </main>
-  );
-}
+import Link from 'next/link'; import ExperienceCard from '@/components/ExperienceCard';
+export default function Home(){return <main className="wrap"><section className="hero"><div><div className="eyebrow">A DAY IN LUXOR WITH THE PHARAOHS</div><h1>اعرف.<br/><span>اتأكد.</span><br/>اتحرك.</h1><p className="lead">اكتشف يومك في الأقصر بطريقة أسرع وأوضح: اختيارات حسب وقتك وميزانيتك، معلومات بمصدر وتاريخ مراجعة، وخطة تحفظها على جهازك.</p><div className="actions"><Link className="btn" href="/what-can-i-do-now">ماذا أفعل الآن؟ / What Can I Do Now?</Link><Link className="btn alt" href="/experiences">استكشف المعالم / Explore</Link></div><div className="trust"><b>✓ مصادر واضحة</b><b>✓ عربي + English</b><b>✓ بدون تسجيل إجباري</b></div></div><div className="seal"><div className="sealmark">𓂀</div><h2>ثقة قبل القرار</h2><p>Verified · Estimated · Needs Review</p><p>كل معلومة مهمة لها مصدر وتاريخ مراجعة.</p></div></section><section className="section"><h2>ابدأ من احتياجك</h2><p className="sub">طرق سريعة للوصول للقرار المناسب.</p><div className="grid"><ExperienceCard title="What Can I Do Now?" ar="ماذا أفعل الآن؟" desc="اختَر وقتك واهتماماتك وميزانيتك للحصول على نقطة بداية عملية." href="/what-can-i-do-now"/><ExperienceCard title="Price Check" ar="تحقق من الأسعار" desc="راجع الأسعار المنشورة ومصدرها وتاريخ المراجعة قبل أن تعتمد عليها." href="/price-check"/><ExperienceCard title="Before You Buy" ar="قبل ما تشتري" desc="قائمة تحقق لما يجب أن تسأل عنه قبل الاتفاق أو الدفع." href="/before-you-buy"/></div></section><section className="section"><h2>خط سير الزائر</h2><div className="grid"><div className="card"><span className="tag">01 · KNOW</span><h3>اعرف</h3><p>ماذا يوجد؟ وماذا يناسب وقتك واهتماماتك؟</p></div><div className="card"><span className="tag">02 · CHECK</span><h3>اتأكد</h3><p>المصدر، تاريخ المراجعة، نوع السعر، وحالة التحقق.</p></div><div className="card"><span className="tag">03 · GO</span><h3>اتحرك</h3><p>خذ الخطوة التالية بوضوح، بدون وعود غير مؤكدة.</p></div></div></section></main>}

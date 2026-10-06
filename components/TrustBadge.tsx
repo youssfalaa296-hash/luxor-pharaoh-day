@@ -1,0 +1,1 @@
+export default function TrustBadge({status='VERIFIED'}:{status?:'VERIFIED'|'ESTIMATED'|'NEEDS_REVIEW'}){const label=status==='VERIFIED'?'Verified / موثوق':status==='ESTIMATED'?'Estimated / تقديري':'Needs Review / يحتاج مراجعة';return <span className="tag" title="الحالة مبنية على المصدر وسجل المراجعة">{label}</span>}

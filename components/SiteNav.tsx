@@ -1,0 +1,2 @@
+import Link from 'next/link';
+export default function SiteNav(){return <header className="nav"><div className="wrap navin"><Link className="brand" href="/">LUXOR PHARAOH DAY 🏺👑</Link><nav className="links" aria-label="Primary"><Link href="/experiences">اكتشف / Explore</Link><Link href="/what-can-i-do-now">الآن / Now</Link><Link href="/price-check">الأسعار / Prices</Link><Link href="/transport">النقل / Transport</Link><Link href="/plan">خطتي / My Plan</Link><Link href="/trust">الثقة / Trust</Link></nav></div></header>}
