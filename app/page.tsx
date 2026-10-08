@@ -3,11 +3,65 @@ import ExperienceCard from '@/components/ExperienceCard';
 import SoundtrackControl from '@/components/SoundtrackControl';
 import VibConcierge from '@/components/VibConcierge';
 
-export default function Home(){return <main className="wrap">
-<section className="hero"><div><div className="eyebrow">A DAY IN LUXOR WITH THE PHARAOHS · DIGITAL TRAVEL COMPANION</div><h1>اعرف.<br/><span>اتأكد.</span><br/>اتحرك.</h1><p className="lead">مش مجرد دليل سياحي: مساعد رحلة يتعامل مع الموقف — من قبل الوصول، لحد آخر اليوم، ومعاك مسار بديل لو الخطة اتغيرت.</p><div className="actions"><Link className="btn" href="/visitor-center">مركز الزائر / Visitor Center</Link><Link className="btn alt" href="/vib">VIB Desk / Very Important Visitor</Link><Link className="btn alt" href="/what-can-i-do-now">ماذا أفعل الآن؟ / Start Now</Link></div><div className="trust"><b>✓ مصادر واضحة</b><b>✓ عربي + English</b><b>✓ بدون تسجيل إجباري</b><b>✓ خطة محلية بدون حساب</b></div></div><div className="seal"><img src="/logo.svg" alt="LUXOR PHARAOH DAY logo" width="220" height="220"/><h2>رحلتك لها نظام</h2><p>Discover · Check · Plan · Go · Adapt · Get Help</p><p>أجواء بصرية متحركة + صوت اختياري + خدمات VIB + خطط احتياطية، مع حدود ثقة واضحة.</p><SoundtrackControl/></div></section>
-<VibConcierge/>
-<section className="section"><h2>ماذا تحتاج؟</h2><p className="sub">لا تحتاج معرفة اسم الصفحة. ابدأ من الموقف الذي أنت فيه.</p><div className="grid"><ExperienceCard title="قبل الوصول" ar="Arrival" desc="جهز يومك واتصالك ونقطة البداية والميزانية." href="/visitor-guide#arrival"/><ExperienceCard title="أنا في الأقصر الآن" ar="Now" desc="حدد الوقت والاهتمامات والميزانية وخذ نقطة بداية." href="/what-can-i-do-now"/><ExperienceCard title="حصلت مشكلة" ar="Pharaoh Rescue" desc="خطة بديلة، سعر غير واضح، مكان مغلق، مشكلة نقل أو تحتاج دعمًا." href="/rescue"/></div></section>
-<section className="section"><h2>الرحلة في مكان واحد</h2><div className="grid"><div className="card"><span className="tag">DISCOVER</span><h3>اكتشف</h3><p>المعالم والخيارات التي تناسب وقتك واهتماماتك.</p><Link className="btn alt" href="/experiences">Explore</Link></div><div className="card"><span className="tag">CHECK</span><h3>اتأكد</h3><p>السعر، المصدر، آخر مراجعة، وما يجب تأكيده قبل الشراء.</p><Link className="btn alt" href="/price-check">Price Check</Link></div><div className="card"><span className="tag">ADAPT</span><h3>اتصرف لو الخطة اتغيرت</h3><p>بدائل حسب الوقت، الميزانية، الموقع، والمجهود.</p><Link className="btn alt" href="/rescue">Pharaoh Rescue</Link></div><div className="card"><span className="tag">GO</span><h3>اتحرك</h3><p>خطوات تنقل عملية، ثم دعم وطوارئ عند الحاجة.</p><Link className="btn alt" href="/transport">Transport</Link></div></div></section>
-<section className="section"><div className="hero-mini"><div><span className="tag">THE DIFFERENCE</span><h2>المنصة لا تسأل: «هتروح فين؟» فقط</h2><p>هي تسأل: «إنت محتاج إيه دلوقتي؟» ثم تبني المسار المناسب، وتقول بوضوح أين توجد معلومة مؤكدة وأين تحتاج تحقق.</p></div><div className="actions"><Link className="btn" href="/vib">اكتشف VIB</Link><Link className="btn alt" href="/trust">Trust & Transparency</Link></div></div></section>
-<section className="section"><h2>قاعدة المنصة</h2><p className="sub">نغطي أكبر قدر عملي من احتياجات الزائر، لكن بدون اختراع بيانات أو تقديم خدمة منظمة قبل جاهزيتها القانونية والتشغيلية. كل جزء له مستوى ثقة واضح ومسار بديل عند نقص المعلومات.</p></section>
-</main>}
+const quick=[
+  ['⌕','استكشف','Explore','/experiences','اعثر على أماكن وتجارب تناسبك.'],
+  ['✦','يومي الذكي','Smart Day','/smart-day','ابنِ يومك حسب الوقت والميزانية والاهتمامات.'],
+  ['✓','فحص الأسعار','Price Check','/price-check','اعرف السعر وما يشمله ومصدر المعلومة.'],
+  ['↗','النقل','Transport','/transport','خطوات تنقل عملية قبل التحرك.'],
+  ['♡','خطتي','My Plan','/plan','احفظ يومك محليًا بدون تسجيل إجباري.'],
+  ['◌','جيب السائح','Tourist Pocket','/tourist-pocket','معلومات أساسية للعمل عند ضعف الاتصال.'],
+] as const;
+
+export default function Home(){
+  return <main className="app-home wrap">
+    <section className="app-hero">
+      <div className="hero-copy">
+        <div className="eyebrow">A DAY IN LUXOR WITH THE PHARAOHS · YOUR DIGITAL TRAVEL COMPANION</div>
+        <h1>اعرف <span>•</span> اتأكد <span>•</span> اتحرك</h1>
+        <p className="lead">دليل ذكي للأقصر يساعدك على اكتشاف المكان، التحقق من المعلومات، بناء يومك، ثم التحرك بثقة — من أول لحظة إلى آخر اليوم.</p>
+        <div className="hero-actions">
+          <Link className="btn" href="/what-can-i-do-now">ابدأ الآن<br/><small>Start Now</small></Link>
+          <Link className="btn alt" href="/smart-day">ابنِ يومي<br/><small>Build My Day</small></Link>
+        </div>
+        <div className="trust"><b>✓ مصادر واضحة / Clear Sources</b><b>✓ عربي + English</b><b>✓ بدون تسجيل إجباري / No forced signup</b></div>
+      </div>
+      <div className="hero-device">
+        <div className="device-top"><span>9:41</span><span>● ● ●</span></div>
+        <div className="device-logo">𓂀</div>
+        <strong>LUXOR<br/>PHARAOH DAY</strong>
+        <span className="device-tag">Your Day in Luxor</span>
+        <div className="device-scene">𓉢 𓂀 𓏏</div>
+        <div className="device-status">✓ معلومات موثوقة<br/><small>Verified visitor information</small></div>
+      </div>
+    </section>
+
+    <section className="now-panel" aria-labelledby="now-title">
+      <div><span className="tag">WHAT CAN I DO NOW?</span><h2 id="now-title">ماذا أستطيع أن أفعل الآن؟<br/><small>What can I do now?</small></h2><p>ابدأ من احتياجك بدل البحث في عشرات الصفحات.</p></div>
+      <Link className="button primary" href="/what-can-i-do-now">حدد وقتي وميزانيتي<br/><small>Set my time & budget</small></Link>
+    </section>
+
+    <section className="section app-section">
+      <div className="section-head"><div><span className="tag">APP NAVIGATION</span><h2>كل وظيفة في شاشة واضحة</h2><p className="sub">Every task has its own focused screen — no endless feed.</p></div></div>
+      <div className="quick-grid">
+        {quick.map(([icon,ar,en,href,desc])=><Link className="quick-card" key={href} href={href}><span className="quick-icon">{icon}</span><strong>{ar}</strong><small>{en}</small><p>{desc}</p><span className="quick-arrow">↗</span></Link>)}
+      </div>
+    </section>
+
+    <VibConcierge/>
+
+    <section className="section app-section">
+      <div className="section-head"><div><span className="tag">TRUST FIRST</span><h2>قبل أن تشتري أو تتحرك</h2><p className="sub">Check the source, freshness and what still needs confirmation.</p></div><Link className="button" href="/trust">الثقة والشفافية<br/><small>Trust & Transparency</small></Link></div>
+      <div className="grid">
+        <ExperienceCard title="Explore" ar="استكشف" desc="المعالم والخيارات التي تناسب وقتك واهتماماتك." href="/experiences"/>
+        <ExperienceCard title="Price Check" ar="فحص الأسعار" desc="السعر، المصدر، آخر مراجعة، وما يجب تأكيده." href="/price-check"/>
+        <ExperienceCard title="Pharaoh Rescue" ar="إنقاذ الخطة" desc="بديل عملي إذا أُغلق مكان أو تغير السعر أو حدثت مشكلة." href="/rescue"/>
+      </div>
+    </section>
+
+    <section className="app-promo">
+      <div><span className="tag">YOUR LUXOR PLAN</span><h2>خطتك معك حتى لو تغيّر اليوم</h2><p>احفظ خطتك، راجع البدائل، واستخدم الأدوات الأساسية حتى عند ضعف الاتصال.</p></div>
+      <div className="actions"><Link className="btn" href="/plan">خطتي / My Plan</Link><Link className="btn alt" href="/tourist-pocket">جيب السائح / Tourist Pocket</Link></div>
+    </section>
+    <SoundtrackControl/>
+  </main>
+}
