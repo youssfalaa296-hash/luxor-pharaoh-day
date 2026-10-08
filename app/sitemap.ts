@@ -1,1 +1,6 @@
-import type {MetadataRoute} from 'next'; export default function sitemap():MetadataRoute.Sitemap{const base=process.env.NEXT_PUBLIC_SITE_URL||'https://luxor-pharaoh-day-q3rd.vercel.app'; const paths=['/','/experiences','/price-check','/what-can-i-do-now','/transport','/before-you-buy','/plan','/help','/trust','/report-issue','/faq','/privacy','/terms','/advanced']; return paths.map(path=>({url:base+path,lastModified:new Date('2026-10-02'),changeFrequency:'weekly',priority:path==='/'?1:.7}));}
+import type {MetadataRoute} from 'next';
+export default function sitemap():MetadataRoute.Sitemap{
+  const base=process.env.NEXT_PUBLIC_SITE_URL||'https://luxor-pharaoh-day-q3rd.vercel.app';
+  const paths=['/','/visitor-center','/vib','/soundtrack','/visitor-guide','/emergency','/experiences','/price-check','/what-can-i-do-now','/transport','/before-you-buy','/plan','/help','/trust','/report-issue','/faq','/privacy','/terms','/advanced','/contact'];
+  return paths.map(path=>({url:base+path,lastModified:new Date('2026-10-08'),changeFrequency:'weekly',priority:path==='/'?1:path==='/visitor-center'?0.95:.7}));
+}
