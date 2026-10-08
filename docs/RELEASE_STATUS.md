@@ -2,31 +2,31 @@
 
 Current: READY_FOR_RELEASE
 
-## Verified evidence
-- GitHub source of truth: main at commit 6c0d202bb533a6df96e3d0a671c726f61a88ea76.
-- GitHub Actions: PASS — Node 24.21.0 / npm 11.19.0 / npm ci / production dependency audit / project verification / lockfile verification / ESLint / TypeScript / production build.
-- Production dependency audit: 0 vulnerabilities at high-or-higher severity with `npm audit --omit=dev --audit-level=high`.
+## Product expansion now in main
+- VIB Desk / Very Important Visitor layer added with differentiated visitor needs and service boundaries.
+- Visitor Center expanded into the primary all-needs hub.
+- Global immersive atmosphere layer added with CSS motion, ambient orbs/dust, and reduced-motion support.
+- Atmosphere Mode upgraded to user-initiated original generated audio.
+- Soundtrack guide added with global mood categories; commercial recordings are not bundled.
+- Sitemap expanded for the new public routes.
+- Browser QA expanded to cover VIB and atmosphere controls.
+
+## Verified baseline evidence
+- Previous GitHub Actions baseline passed Node 24.21.0 / npm 11.19.0 / npm ci / production dependency audit / project verification / lockfile verification / ESLint / TypeScript / production build.
 - Runtime stack: Next.js 16.4.0, React 19.2.0, ESLint 10.12.0.
-- Vercel production deployment: dpl_3LWvAS16VJBU3fbkKirJ8yc4pyoF — READY.
-- Production alias: https://luxor-pharaoh-day-q3rd.vercel.app
-- Production HTTP QA: all public routes returned 200; intentional unknown route returned 404.
-- Static assets QA: /robots.txt, /sitemap.xml, /manifest.webmanifest, /icon.svg all returned 200.
-- Security headers QA: HSTS, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy present.
-- Cache/performance signal: homepage was prerendered and served with Brotli compression and Vercel cache HIT.
-- Runtime error monitoring: no runtime errors found in the selected production window.
+- Existing production deployment dpl_3LWvAS16VJBU3fbkKirJ8yc4pyoF is READY, but it predates the latest VIB/atmosphere source changes.
+- Existing production HTTP QA passed for the previously deployed route set.
+- Real browser visual QA has not been falsely certified.
+
+## Current release gate
+The latest source is in GitHub main, but the latest source is **not yet proven live on Vercel Production**. Vercel status checks for the latest commit are failing because the project/team deployment/build-rate limit is currently blocking new deployment creation. Do not mark VERIFIED.
 
 ## Remaining acceptance gate
-Browser-level visual and interaction QA remains required on real Android Chrome and desktop Chrome before VERIFIED:
-- navigation and touch targets
-- planner interactions
-- local plan save/clear
-- soundtrack control
-- RTL/LTR presentation
-- reduced-motion behavior
-- console errors
-- visual layout at small/medium/large mobile widths
-
-The available deployment inspection tools can verify production HTTP responses and deployment state, but cannot truthfully certify a human-browser visual session. Therefore this release must remain READY_FOR_RELEASE until that final gate is executed.
+1. GitHub Actions on the latest source must pass.
+2. A Vercel Production deployment containing the latest source must become READY.
+3. Production HTTP/SEO/PWA checks must be rerun for the expanded route set.
+4. Real Android Chrome + desktop Chrome visual/interaction acceptance must be completed.
+5. Only then can RELEASE_STATUS move to VERIFIED.
 
 ## Canonical states
 NOT_READY · READY_FOR_RELEASE · RELEASED · VERIFIED · ROLLED_BACK · BLOCKED · REJECTED
