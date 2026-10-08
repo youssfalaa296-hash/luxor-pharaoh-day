@@ -21,6 +21,7 @@ const CORE=[
   '/trust',
   '/report-issue',
   '/offline',
+  '/offline?required=1',
   '/icon.svg',
   '/manifest.webmanifest'
 ];
@@ -70,6 +71,13 @@ self.addEventListener('fetch', event => {
   if (url.origin !== self.location.origin) return;
 
   if (request.mode === 'navigate') {
+    const offlineRequired=url.pathname===OFFLINE && url.searchParams.get('required')==='1';
+    if (offlineRequired) {
+      event.respondWith(
+        fetch(request).catch(() => caches.match('/offline?required=1').then(cached => cached || caches.match(OFFLINE)))
+      );
+      return;
+    }
     const networkOnly=isNetworkRequired(url.pathname);
 
     event.respondWith(
@@ -88,7 +96,6 @@ self.addEventListener('fetch', event => {
               if (!cached) return Response.error();
               const redirectUrl=new URL(OFFLINE,self.location.origin);
               redirectUrl.searchParams.set('required','1');
-              redirectUrl.searchParams.set('target',target);
               return Response.redirect(redirectUrl.toString(),302);
             });
           }
