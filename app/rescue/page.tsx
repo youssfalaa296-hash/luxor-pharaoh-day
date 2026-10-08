@@ -27,7 +27,7 @@ export default function Rescue() {
   return (
     <main className="wrap page">
       <div className="eyebrow">PHARAOH RESCUE / إنقاذ الرحلة</div>
-      <h1>حصلت مشكلة؟ خلّي أول خطوة واضحة.</h1>
+      <h1>إنقاذ الرحلة<br/><span>حصلت مشكلة؟ خلّي أول خطوة واضحة.</span></h1>
       <p className="lead">
         مركز Recovery داخل LUXOR PHARAOH DAY. لا نعد بحل أو توافر خدمة غير متحقق؛
         نرتب لك مسار القرار الصحيح ونوضح متى تحتاج جهة رسمية أو دعمًا مباشرًا.
