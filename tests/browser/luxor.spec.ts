@@ -20,6 +20,8 @@ const routes = [
   '/visitor-center',
   '/visitor-guide',
   '/emergency',
+  '/vib',
+  '/soundtrack',
 ];
 
 for (const route of routes) {
@@ -117,4 +119,21 @@ test('production acceptance gate persists checklist state and blocks false VERIF
   await expect(first).toBeChecked();
   await expect(page.locator('.acceptance-status')).toContainText('INCOMPLETE');
   await expect(page.locator('.acceptance-final')).toContainText(/VERIFIED/);
+});
+
+
+test('VIB desk exposes differentiated needs and a direct request path', async ({ page }) => {
+  await page.goto('/vib', { waitUntil: 'networkidle' });
+  await expect(page.getByText(/VIB · VERY IMPORTANT VISITOR/i)).toBeVisible();
+  await expect(page.getByText(/Arrival Rescue/i)).toBeVisible();
+  await expect(page.getByRole('link', { name: /ابدأ طلب VIB/i })).toBeVisible();
+});
+
+test('immersive atmosphere respects user controls and soundtrack guide is reachable', async ({ page }) => {
+  await page.goto('/', { waitUntil: 'networkidle' });
+  const motion = page.getByRole('button', { name: /إيقاف الحركة|تشغيل الحركة/i });
+  await expect(motion).toBeVisible();
+  await motion.click();
+  await motion.click();
+  await expect(page.getByRole('link', { name: /اختيار الموسيقى/i })).toBeVisible();
 });
