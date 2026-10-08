@@ -26,6 +26,14 @@ for (const route of routes) {
       if (msg.type() === 'error') errors.push(msg.text());
     });
     page.on('pageerror', err => errors.push(err.message));
+    page.on('response', response => {
+      const status = response.status();
+      const url = response.url();
+      const isLocalVercelTelemetry = /\/(_vercel\/analytics|_vercel\/speed-insights)/.test(url);
+      if (status >= 400 && !isLocalVercelTelemetry) {
+        errors.push(`HTTP ${status}: ${url}`);
+      }
+    });
 
     const response = await page.goto(route, { waitUntil: 'networkidle' });
     expect(response?.status()).toBe(200);
@@ -104,5 +112,6 @@ test('production acceptance gate persists checklist state and blocks false VERIF
   await expect(first).toBeChecked();
   await page.reload({ waitUntil: 'networkidle' });
   await expect(first).toBeChecked();
-  await expect(page.getByText(/VERIFIED/)).toBeVisible();
+  await expect(page.locator('.acceptance-status')).toContainText('INCOMPLETE');
+  await expect(page.locator('.acceptance-final')).toContainText(/VERIFIED/);
 });
