@@ -44,7 +44,7 @@ for (const route of routes) {
     page.on('response', response => {
       const status = response.status();
       const url = response.url();
-      const isLocalVercelTelemetry = /\\/(_vercel\\/analytics|_vercel\\/speed-insights)/.test(url);
+      const isLocalVercelTelemetry = url.includes('/_vercel/analytics/') || url.includes('/_vercel/speed-insights/');
       if (status >= 400 && !isLocalVercelTelemetry) {
         errors.push(`HTTP ${status}: ${url}`);
       }
