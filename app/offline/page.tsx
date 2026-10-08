@@ -1,17 +1,13 @@
-'use client';
-
 import Link from 'next/link';
-import {useEffect,useState} from 'react';
 
-export default function Offline(){
-  const [required,setRequired]=useState(false);
-  const [target,setTarget]=useState('');
+type OfflineProps={
+  searchParams:Promise<{required?:string;target?:string}>
+};
 
-  useEffect(()=>{
-    const params=new URLSearchParams(window.location.search);
-    setRequired(params.get('required')==='1');
-    setTarget(params.get('target')||'');
-  },[]);
+export default async function Offline({searchParams}:OfflineProps){
+  const params=await searchParams;
+  const required=params.required==='1';
+  const target=params.target||'';
 
   return <main className="wrap page offline-page">
     <div className="offline-hero">
