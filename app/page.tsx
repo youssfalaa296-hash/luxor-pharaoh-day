@@ -2,6 +2,7 @@ import Link from 'next/link';
 import ExperienceCard from '@/components/ExperienceCard';
 import SoundtrackControl from '@/components/SoundtrackControl';
 import VibConcierge from '@/components/VibConcierge';
+import QuickSearch from '@/components/QuickSearch';
 
 const quick=[
   ['⌕','استكشف','Explore','/experiences','اعثر على أماكن وتجارب تناسبك.'],
