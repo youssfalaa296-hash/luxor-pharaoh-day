@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 
 const routes = [
   '/',
+  '/search?q=price',
   '/experiences',
   '/price-check',
   '/what-can-i-do-now',
@@ -55,6 +56,17 @@ for (const route of routes) {
     expect(errors, `browser errors on ${route}`).toEqual([]);
   });
 }
+
+test('visitor search returns a useful local result and keeps raw query out of analytics attributes', async ({ page }) => {
+  await page.goto('/', { waitUntil: 'networkidle' });
+  const input = page.getByRole('textbox', { name: /Search/i }).first();
+  await expect(input).toBeVisible();
+  await input.fill('سعر وادي الملوك');
+  await page.getByRole('button', { name: /بحث \/ Search/i }).click();
+  await expect(page).toHaveURL(/\/search\?q=/);
+  await expect(page.getByText(/وادي الملوك|Price Check/i).first()).toBeVisible();
+  await expect(page.locator('[data-analytics-event="search_submitted"]')).toHaveCount(0);
+});
 
 test('planner generates a recommendation and preserves accessible interaction', async ({ page }) => {
   await page.goto('/what-can-i-do-now', { waitUntil: 'networkidle' });
