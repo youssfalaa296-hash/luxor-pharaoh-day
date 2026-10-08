@@ -51,7 +51,7 @@ export default async function Verification({
       <div className="grid">
         <article className="card"><h2>Fresh</h2><p>{summary.fresh} / {summary.total}</p></article>
         <article className="card"><h2>Stale</h2><p>{summary.stale}</p></article>
-        <article className="card"><h2>Needs review</h2><p>{summary.needsReview}</p></article>
+        <article className="card"><h2>Needs review</h2><p>{summary.needsReview}</p></article><article className="card"><h2>Due soon</h2><p>{summary.dueSoon}</p></article>
       </div>
 
       <section className="section">
@@ -60,7 +60,7 @@ export default async function Verification({
           {summary.records.map(({site, trust}) => (
             <article key={site.id}>
               <b>{site.arabicTitle} · {site.title}</b>
-              <p>{trust.labelAr} · {trust.ageDays} يوم · آخر مراجعة {trust.lastReviewed}</p>
+              <p>{trust.labelAr} · {trust.ageDays} يوم · {trust.dueSoon?'مراجعة قريبة / Due soon':''} · آخر مراجعة {trust.lastReviewed}</p>
               <a href={site.sourceUrl} target="_blank" rel="noreferrer">افتح المصدر الرسمي →</a>
             </article>
           ))}
