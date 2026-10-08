@@ -58,6 +58,6 @@ export default function RootLayout({children}:{children:React.ReactNode}){
         </div>
       </div>
     </footer>
-    {enableVercelTelemetry && <><SpeedInsights/><Analytics/></>}
+    {enableVercelTelemetry && <><SpeedInsights/><Analytics beforeSend={event=>event.url.includes('/admin')?null:event}/></>}
   </body></html>
 }
