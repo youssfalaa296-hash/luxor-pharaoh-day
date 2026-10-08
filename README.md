@@ -5,7 +5,7 @@
 [![Node.js CI](https://github.com/youssfalaa296-hash/luxor-pharaoh-day-9831bee9/actions/workflows/node.js.yml/badge.svg)](https://github.com/youssfalaa296-hash/luxor-pharaoh-day-9831bee9/actions/workflows/node.js.yml)
 
 ## Product path
-KNOW → CHECK → GO / اعرف → اتأكد → اتحرك
+KNOW → CHECK → GO → ADAPT → GET HELP / اعرف → اتأكد → اتحرك → اتصرف → اطلب المساعدة
 
 ## Current release gate
 **RELEASE_STATUS: READY_FOR_RELEASE**
@@ -48,6 +48,12 @@ Checked successfully:
 - /privacy
 - /terms
 - /advanced
+- /contact
+- /visitor-center
+- /vib
+- /soundtrack
+- /visitor-guide
+- /emergency
 - /robots.txt
 - /sitemap.xml
 - /manifest.webmanifest
@@ -62,6 +68,9 @@ Checked successfully:
 - Interactive “What Can I Do Now?” planner.
 - Local plan persistence without mandatory signup.
 - Optional original ambient sound layer that starts only after user action.
+- VIB Desk / Very Important Visitor: differentiated concierge-style request paths, recovery, family, accessibility, photo, evening and daily-needs guidance.
+- Immersive CSS atmosphere layer with reduced-motion support and a dedicated soundtrack guide; no commercial recordings bundled.
+- Visitor Center now acts as the single entry point for visitor needs.
 
 ## Compliance boundary
 This is an independent digital visitor information and planning platform. It does not claim government affiliation, licensed-provider status, guaranteed pricing, booking, or payment processing without documented operational readiness.
