@@ -30,7 +30,7 @@ jobs:
         run: npm ci
 
       - name: Install Playwright Chromium
-        run: npx --yes playwright@1.55.0 install --with-deps chromium
+        run: npx --yes playwright@1.63.0 install --with-deps chromium
 
       - name: Start production server
         run: |
@@ -41,7 +41,7 @@ jobs:
       - name: Run browser QA
         env:
           BASE_URL: http://127.0.0.1:3000
-        run: npx --yes playwright@1.55.0 test
+        run: npx --yes playwright@1.63.0 test
 
       - name: Upload browser evidence
         if: always()
