@@ -200,3 +200,15 @@ test('offline mode keeps core navigation available and gates network-only action
   await page.getByRole('link', { name: /جيب السائح|Tourist Pocket/i }).first().click();
   await expect(page).toHaveURL(/\/tourist-pocket$/);
 });
+
+
+test('direct offline navigation to a network-only route shows the connection requirement', async ({ page, context }) => {
+  await page.goto('/', { waitUntil: 'networkidle' });
+  await page.evaluate(async () => {
+    if ('serviceWorker' in navigator) await navigator.serviceWorker.ready;
+  });
+  await context.setOffline(true);
+  await page.goto('/vib', { waitUntil: 'domcontentloaded' });
+  await expect(page.getByRole('heading', { name: /هذه الوظيفة تحتاج الإنترنت/i })).toBeVisible();
+  await expect(page.getByText(/شغّل بيانات الهاتف أو Wi‑Fi/i)).toBeVisible();
+});
