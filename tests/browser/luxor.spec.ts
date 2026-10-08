@@ -59,7 +59,7 @@ for (const route of routes) {
 
 test('visitor search returns a useful local result and keeps raw query out of analytics attributes', async ({ page }) => {
   await page.goto('/', { waitUntil: 'networkidle' });
-  const input = page.getByRole('textbox', { name: /Search/i }).first();
+  const input = page.getByRole('textbox', { name: /Search|بحث/i }).first();
   await expect(input).toBeVisible();
   await input.fill('سعر وادي الملوك');
   await page.getByRole('button', { name: /بحث \/ Search/i }).click();
@@ -153,6 +153,7 @@ test('immersive atmosphere respects user controls and soundtrack guide is reacha
   await page.goto('/', { waitUntil: 'networkidle' });
   const motion = page.getByRole('button', { name: /إيقاف الحركة|تشغيل الحركة/i });
   await expect(motion).toBeVisible();
+  await motion.scrollIntoViewIfNeeded();
   await motion.click();
   await motion.click();
   await expect(page.getByRole('link', { name: /اختيار الموسيقى/i })).toBeVisible();
@@ -208,6 +209,8 @@ test('offline mode keeps core navigation available and gates network-only action
   await vibLink.click();
   await expect(page.getByRole('dialog')).toBeVisible();
   await expect(page.getByRole('heading', { name: /شغّل الإنترنت للمتابعة/i })).toBeVisible();
+
+  await page.getByRole('button', { name: /Stay offline|متابعة بدون إنترنت/i }).click();
 
   const pocketLink = page.getByRole('link', { name: /جيب السائح|Tourist Pocket/i }).last();
   await expect(pocketLink).toBeVisible();
