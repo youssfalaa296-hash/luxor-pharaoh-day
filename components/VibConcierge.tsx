@@ -13,8 +13,10 @@ const needs=[
   ['🧰','احتياج عاجل','أحتاج حلًا عمليًا لمشكلة حدثت الآن.'],
 ] as const;
 
+type NeedIcon = typeof needs[number][0];
+
 export default function VibConcierge(){
-  const [selected,setSelected]=useState(needs[0][0]);
+  const [selected,setSelected]=useState<NeedIcon>(needs[0][0]);
   const item=useMemo(()=>needs.find(x=>x[0]===selected)??needs[0],[selected]);
   const message=encodeURIComponent('LUXOR PHARAOH DAY — Concierge Request\nNeed: '+item[1]+'\nDetails: ');
   return <section className="section concierge">
