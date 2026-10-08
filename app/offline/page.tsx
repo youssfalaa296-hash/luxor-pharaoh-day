@@ -8,6 +8,9 @@ export default async function Offline({searchParams}:OfflineProps){
   const params=await searchParams;
   const required=params.required==='1';
   const target=params.target||'';
+  const retryHref=required
+    ? `/offline?required=1${target?`&target=${encodeURIComponent(target)}`:''}`
+    : '/offline';
 
   return <main className="wrap page offline-page">
     <div className="offline-hero">
@@ -20,7 +23,7 @@ export default async function Offline({searchParams}:OfflineProps){
       }</p>
       {target && <p className="offline-target">الطلب: <code>{target}</code></p>}
       <div className="hero-actions">
-        <button className="btn" type="button" onClick={()=>window.location.reload()}>حاول مرة أخرى<br/><small>Try again</small></button>
+        <Link className="btn" href={retryHref}>حاول مرة أخرى<br/><small>Try again</small></Link>
         <Link className="btn alt" href="/tourist-pocket">جيب السائح<br/><small>Tourist Pocket</small></Link>
       </div>
     </div>
