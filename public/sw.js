@@ -89,7 +89,7 @@ self.addEventListener('fetch', event => {
               const redirectUrl=new URL(OFFLINE,self.location.origin);
               redirectUrl.searchParams.set('required','1');
               redirectUrl.searchParams.set('target',target);
-              return fetch(redirectUrl).catch(()=>cached);
+              return Response.redirect(redirectUrl.toString(),302);
             });
           }
           return caches.match(request).then(cached => cached || caches.match(OFFLINE));
