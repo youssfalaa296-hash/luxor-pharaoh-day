@@ -16,7 +16,7 @@ jobs:
   browser-qa:
     name: Chromium browser QA
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 12
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -66,7 +66,7 @@ jobs:
         env:
           BASE_URL: http://127.0.0.1:3000
           CI: true
-        run: npx --yes playwright@1.63.0 test
+        run: npx --yes playwright@1.63.0 test --reporter=line --timeout=15000 --global-timeout=300000
 
       - name: Upload browser evidence
         if: always()
