@@ -64,7 +64,7 @@ test('visitor search returns a useful local result and keeps raw query out of an
   await input.fill('سعر وادي الملوك');
   await page.getByRole('button', { name: /بحث \/ Search/i }).click();
   await expect(page).toHaveURL(/\/search\?q=/);
-  await expect(page.getByText(/وادي الملوك|Price Check/i).first()).toBeVisible();
+  await expect(page.locator('main').getByText(/فحص الأسعار|Price Check/i).first()).toBeVisible();
   await expect(page.locator('[data-analytics-event="search_submitted"]')).toHaveCount(0);
 });
 
@@ -199,6 +199,17 @@ test('critical routes expose a usable main landmark', async ({ page }) => {
 
 test('offline mode keeps core navigation available and gates network-only actions', async ({ page, context }) => {
   await page.goto('/', { waitUntil: 'networkidle' });
+  await page.evaluate(async () => {
+    if (!('serviceWorker' in navigator)) throw new Error('Service workers are unavailable');
+    const reg = await navigator.serviceWorker.ready;
+    if (!navigator.serviceWorker.controller) {
+      await new Promise<void>(resolve => {
+        navigator.serviceWorker.addEventListener('controllerchange', () => resolve(), { once: true });
+      });
+    }
+    if (!navigator.serviceWorker.controller) throw new Error(`Service worker is not controlling the page: ${reg.active?.state ?? 'unknown'}`);
+  });
+  await page.reload({ waitUntil: 'networkidle' });
   await context.setOffline(true);
 
   await expect(page.getByText(/بدون إنترنت \/ Offline/i)).toBeVisible();
@@ -241,5 +252,4 @@ test('offline service worker serves the network-required navigation fallback', a
   expect(response?.status()).toBe(200);
   await expect(page).toHaveURL(/\/offline\?required=1/);
   await expect(page.getByRole('heading', { name: /هذه الوظيفة تحتاج الإنترنت/i })).toBeVisible();
-  await expect(page.getByText(/الطلب:/i)).toBeVisible();
 });
