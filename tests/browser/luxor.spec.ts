@@ -17,6 +17,9 @@ const routes = [
   '/advanced',
   '/contact',
   '/production-qa',
+  '/visitor-center',
+  '/visitor-guide',
+  '/emergency',
 ];
 
 for (const route of routes) {
