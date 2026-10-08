@@ -36,7 +36,7 @@ export default function Home(){
       </div>
     </section>
 
-    <section className="now-panel" aria-labelledby="now-title">
+    <QuickSearch/>\n\n    <section className="now-panel" aria-labelledby="now-title">
       <div><span className="tag">WHAT CAN I DO NOW?</span><h2 id="now-title">ماذا أستطيع أن أفعل الآن؟<br/><small>What can I do now?</small></h2><p>ابدأ من احتياجك بدل البحث في عشرات الصفحات.</p></div>
       <Link className="button primary" href="/what-can-i-do-now">حدد وقتي وميزانيتي<br/><small>Set my time & budget</small></Link>
     </section>
