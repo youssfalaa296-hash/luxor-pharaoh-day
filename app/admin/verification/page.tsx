@@ -14,7 +14,11 @@ export default async function Verification({
 }) {
   const p = await searchParams;
   const enabled = process.env.VERIFICATION_DASHBOARD_ENABLED === 'true';
+  const productionLocked = process.env.VERCEL_ENV === 'production';
+
+  // Fail closed: the temporary query-string key is never accepted on Production.
   const authorized =
+    !productionLocked &&
     enabled &&
     !!p.key &&
     !!process.env.VERIFICATION_ADMIN_KEY &&
@@ -26,7 +30,8 @@ export default async function Verification({
         <div className="eyebrow">INTERNAL CONTROL</div>
         <h1>Verification Control Room</h1>
         <p className="notice">
-          هذه الواجهة داخلية ومغلقة افتراضيًا. فعّلها فقط في بيئة مراجعة آمنة.
+          هذه الواجهة داخلية ومغلقة افتراضيًا. لا يتم قبول مفتاح URL في Production.
+          قبل التشغيل التشغيلي يجب وضعها خلف مصادقة حقيقية/حماية Vercel ثم تفعيلها صراحة.
         </p>
       </main>
     );
@@ -44,18 +49,9 @@ export default async function Verification({
       </p>
 
       <div className="grid">
-        <article className="card">
-          <h2>Fresh</h2>
-          <p>{summary.fresh} / {summary.total}</p>
-        </article>
-        <article className="card">
-          <h2>Stale</h2>
-          <p>{summary.stale}</p>
-        </article>
-        <article className="card">
-          <h2>Needs review</h2>
-          <p>{summary.needsReview}</p>
-        </article>
+        <article className="card"><h2>Fresh</h2><p>{summary.fresh} / {summary.total}</p></article>
+        <article className="card"><h2>Stale</h2><p>{summary.stale}</p></article>
+        <article className="card"><h2>Needs review</h2><p>{summary.needsReview}</p></article>
       </div>
 
       <section className="section">
@@ -64,12 +60,8 @@ export default async function Verification({
           {summary.records.map(({site, trust}) => (
             <article key={site.id}>
               <b>{site.arabicTitle} · {site.title}</b>
-              <p>
-                {trust.labelAr} · {trust.ageDays} يوم · آخر مراجعة {trust.lastReviewed}
-              </p>
-              <a href={site.sourceUrl} target="_blank" rel="noreferrer">
-                افتح المصدر الرسمي →
-              </a>
+              <p>{trust.labelAr} · {trust.ageDays} يوم · آخر مراجعة {trust.lastReviewed}</p>
+              <a href={site.sourceUrl} target="_blank" rel="noreferrer">افتح المصدر الرسمي →</a>
             </article>
           ))}
         </div>
