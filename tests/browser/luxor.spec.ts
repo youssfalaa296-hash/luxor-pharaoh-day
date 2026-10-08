@@ -186,3 +186,17 @@ test('critical routes expose a usable main landmark', async ({ page }) => {
     await expect(page.locator('main')).toBeVisible();
   }
 });
+
+
+test('offline mode keeps core navigation available and gates network-only actions', async ({ page, context }) => {
+  await page.goto('/', { waitUntil: 'networkidle' });
+  await context.setOffline(true);
+
+  await expect(page.getByText(/بدون إنترنت \/ Offline/i)).toBeVisible();
+  await page.getByRole('link', { name: /VIB Desk/i }).first().click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.getByRole('heading', { name: /شغّل الإنترنت للمتابعة/i })).toBeVisible();
+
+  await page.getByRole('link', { name: /جيب السائح|Tourist Pocket/i }).first().click();
+  await expect(page).toHaveURL(/\/tourist-pocket$/);
+});
