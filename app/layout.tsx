@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import {SpeedInsights} from '@vercel/speed-insights/next';
 import {Analytics} from '@vercel/analytics/next';
 import SiteNav from '@/components/SiteNav';
+import AtmosphereLayer from '@/components/AtmosphereLayer';
 import './globals.css';
 
 const siteUrl=process.env.NEXT_PUBLIC_SITE_URL||'https://luxor-pharaoh-day-q3rd.vercel.app';
@@ -15,7 +16,7 @@ export const metadata:Metadata={
   title:{default:'LUXOR PHARAOH DAY 🏺👑',template:'%s · LUXOR PHARAOH DAY'},
   description:'A Day in Luxor with the Pharaohs — منصة مستقلة ثنائية اللغة تساعد زوار الأقصر على المعرفة والتحقق والتخطيط والدعم العملي.',
   applicationName:'LUXOR PHARAOH DAY',
-  keywords:['Luxor','Luxor tourism','Luxor Temple','Karnak','Egypt travel','الأقصر','سياحة الأقصر'],
+  keywords:['Luxor','Luxor tourism','Luxor Temple','Karnak','Egypt travel','الأقصر','سياحة الأقصر','VIB visitor concierge'],
   alternates:{canonical:siteUrl},
   openGraph:{type:'website',url:siteUrl,title:'LUXOR PHARAOH DAY 🏺👑',description:'اعرف • اتأكد • اتحرك — A Day in Luxor with the Pharaohs',siteName:'LUXOR PHARAOH DAY'},
   twitter:{card:'summary_large_image',title:'LUXOR PHARAOH DAY 🏺👑',description:'اعرف • اتأكد • اتحرك — A Day in Luxor with the Pharaohs'},
@@ -28,19 +29,18 @@ const structuredData={
   '@type':'WebSite',
   name:'LUXOR PHARAOH DAY',
   url:siteUrl,
-  description:'Independent bilingual visitor information and local planning platform for Luxor.',
+  description:'Independent bilingual visitor information, planning and practical support platform for Luxor.',
   inLanguage:['ar','en'],
-  contactPoint:[
-    { '@type':'ContactPoint',contactType:'customer support',telephone:'+20-101-280-1568',email }
-  ],
+  contactPoint:[{'@type':'ContactPoint',contactType:'customer support',telephone:'+20-101-280-1568',email}],
   sameAs:[instagram]
 };
 
 export default function RootLayout({children}:{children:React.ReactNode}){
   return <html lang="ar" dir="rtl"><body>
+    <AtmosphereLayer/>
     <SiteNav/>
     <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structuredData)}} />
-    <div id="main-content">{children}</div>
+    <div id="main-content" className="app-content">{children}</div>
     <footer className="footer">
       <div className="wrap">
         <strong>LUXOR PHARAOH DAY 🏺👑</strong> · KNOW • CHECK • GO<br/>
@@ -49,6 +49,8 @@ export default function RootLayout({children}:{children:React.ReactNode}){
           <a href={`https://wa.me/${whatsapp}`}>WhatsApp / واتساب</a> ·
           <a href={`mailto:${email}`}>Email / البريد</a> ·
           <a href={instagram} rel="noreferrer">Instagram</a> ·
+          <a href="/vib">VIB Desk</a> ·
+          <a href="/soundtrack">Soundtrack</a> ·
           <a href="/contact">Contact / تواصل</a>
         </div>
       </div>
