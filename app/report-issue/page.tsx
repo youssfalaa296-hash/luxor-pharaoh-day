@@ -21,7 +21,7 @@ export default function Report(){
         <div className="field"><label htmlFor="place">الصفحة أو المكان</label><input id="place" value={place} onChange={e=>setPlace(e.target.value)} placeholder="مثال: Luxor Temple أو رابط الصفحة"/></div>
       </div>
       <div className="field" style={{marginTop:14}}><label htmlFor="details">التفاصيل</label><textarea id="details" rows={5} value={details} onChange={e=>setDetails(e.target.value)} placeholder="ما الذي يحتاج تصحيحًا؟"/></div>
-      <button className="btn" style={{marginTop:14}} onClick={()=>setSent(true)}>تجهيز البلاغ / Prepare report</button>
+      <button className="btn" style={{marginTop:14}} onClick={()=>setSent(true)} data-analytics-event="issue_prepared" data-analytics-value={type}>تجهيز البلاغ / Prepare report</button>
       {sent?<div className="actions" style={{marginTop:14}}>
         <a className="btn" href={`https://wa.me/201012801568?text=${whatsappText}`} target="_blank" rel="noreferrer">إرسال عبر WhatsApp</a>
         <a className="btn alt" href={`mailto:youssfalaa296@gmail.com?subject=Luxor%20Pharaoh%20Day%20Issue&body=${mailBody}`}>إرسال بالبريد</a>
