@@ -43,7 +43,7 @@ for (const route of routes) {
     page.on('response', response => {
       const status = response.status();
       const url = response.url();
-      const isLocalVercelTelemetry = /\/(_vercel\/analytics|_vercel\/speed-insights)/.test(url);
+      const isLocalVercelTelemetry = /\\/(_vercel\\/analytics|_vercel\\/speed-insights)/.test(url);
       if (status >= 400 && !isLocalVercelTelemetry) {
         errors.push(`HTTP ${status}: ${url}`);
       }
@@ -59,9 +59,10 @@ for (const route of routes) {
 test('planner generates a recommendation and preserves accessible interaction', async ({ page }) => {
   await page.goto('/what-can-i-do-now', { waitUntil: 'networkidle' });
 
-  const buttons = page.getByRole('button');
-  await expect(buttons.first()).toBeVisible();
-  await buttons.first().click();
+  const firstChoice = page.locator('.choice').first();
+  await expect(firstChoice).toBeVisible();
+  await firstChoice.scrollIntoViewIfNeeded();
+  await firstChoice.click({ timeout: 10000 });
 
   const result = page.locator('[aria-live="polite"]');
   await expect(result).toBeVisible();
@@ -115,7 +116,6 @@ test('contact channels expose project-only contact details', async ({ page }) =>
   await expect(page.getByText('youssfalaa296@gmail.com')).toBeVisible();
 });
 
-
 test('production acceptance gate persists checklist state and blocks false VERIFIED', async ({ page }) => {
   await page.goto('/production-qa', { waitUntil: 'networkidle' });
   await expect(page.getByRole('heading', { name: /دليل المتصفح التفاعلي/i })).toBeVisible();
@@ -129,7 +129,6 @@ test('production acceptance gate persists checklist state and blocks false VERIF
   await expect(page.locator('.acceptance-status')).toContainText('INCOMPLETE');
   await expect(page.locator('.acceptance-final')).toContainText(/VERIFIED/);
 });
-
 
 test('VIB desk exposes differentiated needs and a direct request path', async ({ page }) => {
   await page.goto('/vib', { waitUntil: 'networkidle' });
@@ -147,14 +146,12 @@ test('immersive atmosphere respects user controls and soundtrack guide is reacha
   await expect(page.getByRole('link', { name: /اختيار الموسيقى/i })).toBeVisible();
 });
 
-
 test('Pharaoh Rescue recovery center provides safe decision paths', async ({ page }) => {
   await page.goto('/rescue', { waitUntil: 'networkidle' });
   await expect(page.getByRole('heading', { name: /إنقاذ الرحلة/i })).toBeVisible();
   await expect(page.getByText(/RECOVERY FLOW/i)).toBeVisible();
   await expect(page.getByRole('link', { name: /طوارئ \/ Emergency/i })).toBeVisible();
 });
-
 
 test('mobile viewport has no horizontal overflow', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -169,7 +166,7 @@ test('keyboard navigation reaches an actionable control', async ({ page }) => {
   await expect(page.locator(':focus-visible')).toBeVisible();
 });
 
-test('service worker registers and offline fallback is available', async ({ page, context }) => {
+test('service worker registers and offline fallback is available', async ({ page }) => {
   await page.goto('/tourist-pocket', { waitUntil: 'networkidle' });
   await expect(page.locator('body')).toBeVisible();
   const registration = await page.evaluate(async () => {
@@ -187,31 +184,47 @@ test('critical routes expose a usable main landmark', async ({ page }) => {
   }
 });
 
-
 test('offline mode keeps core navigation available and gates network-only actions', async ({ page, context }) => {
   await page.goto('/', { waitUntil: 'networkidle' });
   await context.setOffline(true);
 
   await expect(page.getByText(/بدون إنترنت \/ Offline/i)).toBeVisible();
-  await page.getByRole('link', { name: /VIB Desk/i }).first().click();
+
+  const vibLink = page.locator('a[data-requires-network="true"][href="/vib"]').last();
+  await expect(vibLink).toBeAttached();
+  await vibLink.scrollIntoViewIfNeeded();
+  await vibLink.click();
   await expect(page.getByRole('dialog')).toBeVisible();
   await expect(page.getByRole('heading', { name: /شغّل الإنترنت للمتابعة/i })).toBeVisible();
 
-  await page.getByRole('link', { name: /جيب السائح|Tourist Pocket/i }).first().click();
+  const pocketLink = page.getByRole('link', { name: /جيب السائح|Tourist Pocket/i }).last();
+  await expect(pocketLink).toBeVisible();
+  await pocketLink.click();
   await expect(page).toHaveURL(/\/tourist-pocket$/);
 });
 
-
-test('offline service worker serves the network-required fallback response', async ({ page, context }) => {
+test('offline service worker serves the network-required navigation fallback', async ({ page, context }) => {
   await page.goto('/', { waitUntil: 'networkidle' });
+
   await page.evaluate(async () => {
-    if ('serviceWorker' in navigator) await navigator.serviceWorker.ready;
+    if (!('serviceWorker' in navigator)) throw new Error('Service workers are unavailable');
+    const reg = await navigator.serviceWorker.ready;
+    if (!navigator.serviceWorker.controller) {
+      await new Promise<void>(resolve => {
+        navigator.serviceWorker.addEventListener('controllerchange', () => resolve(), { once: true });
+      });
+    }
+    if (!navigator.serviceWorker.controller) {
+      throw new Error(`Service worker is not controlling the page: ${reg.active?.state ?? 'unknown'}`);
+    }
   });
+
+  await page.reload({ waitUntil: 'networkidle' });
   await context.setOffline(true);
-  const result=await page.evaluate(async () => {
-    const response=await fetch('/vib');
-    return {status:response.status,text:await response.text()};
-  });
-  expect(result.status).toBe(200);
-  expect(result.text).toContain('هذه الوظيفة تحتاج الإنترنت');
+
+  const response = await page.goto('/vib', { waitUntil: 'domcontentloaded' });
+  expect(response?.status()).toBe(200);
+  await expect(page).toHaveURL(/\/offline\?required=1/);
+  await expect(page.getByRole('heading', { name: /هذه الوظيفة تحتاج الإنترنت/i })).toBeVisible();
+  await expect(page.getByText(/الطلب:.*\\/vib/i)).toBeVisible();
 });
