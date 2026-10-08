@@ -1,10 +1,10 @@
 'use client';
 
-import {useEffect,useState} from 'react';
+import {useState} from 'react';
 
 export default function AtmosphereLayer(){
   const [active,setActive]=useState(true);
-  useEffect(()=>{setActive(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)},[]);
+
   return <>
     <div className={active?'atmosphere active':'atmosphere'} aria-hidden="true">
       <span className="atmosphere-orb orb-1"/>
