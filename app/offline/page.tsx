@@ -1,0 +1,1 @@
+export default function Offline(){return <main className="wrap page"><div className="eyebrow">OFFLINE / بدون اتصال</div><h1>أنت بدون اتصال الآن</h1><p className="lead">افتح Tourist Pocket أو خطتك المحلية. أي معلومة حساسة للوقت يجب إعادة التحقق منها عند عودة الاتصال.</p></main>}
