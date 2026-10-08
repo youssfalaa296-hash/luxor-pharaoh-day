@@ -48,12 +48,12 @@ export default function RootLayout({children}:{children:React.ReactNode}){
         <strong>LUXOR PHARAOH DAY 🏺👑</strong> · KNOW • CHECK • GO<br/>
         منصة مستقلة للمعلومات والتخطيط والدعم العملي — لا تمثل جهة حكومية ولا تدّعي ترخيص شركة سياحة.
         <div className="footer-contact">
-          <a href={`https://wa.me/${whatsapp}`}>WhatsApp / واتساب</a> ·
-          <a href={`mailto:${email}`}>Email / البريد</a> ·
-          <a href={instagram} rel="noreferrer">Instagram</a> ·
-          <a href="/vib">VIB Desk</a> ·
-          <a href="/soundtrack">Soundtrack</a> ·
-          <a href="/contact">Contact / تواصل</a>
+          <a href={`https://wa.me/${whatsapp}`} data-requires-network="true">WhatsApp / واتساب</a> ·
+          <a href={`mailto:${email}`} data-requires-network="true">Email / البريد</a> ·
+          <a href={instagram} rel="noreferrer" data-requires-network="true">Instagram</a> ·
+          <a href="/vib" data-requires-network="true">VIB Desk</a> ·
+          <a href="/soundtrack" data-requires-network="true">Soundtrack</a> ·
+          <a href="/contact" data-requires-network="true">Contact / تواصل</a>
         </div>
       </div>
     </footer>
