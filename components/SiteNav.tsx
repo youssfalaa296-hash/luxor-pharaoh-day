@@ -4,7 +4,12 @@ import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 
 const links=[
-  ['/experiences','اكتشف / Explore'],['/what-can-i-do-now','الآن / Now'],['/price-check','الأسعار / Prices'],['/transport','النقل / Transport'],['/plan','خطتي / My Plan'],['/trust','الثقة / Trust']
+  ['/visitor-center','مركز الزائر / Visitor Center'],
+  ['/what-can-i-do-now','ماذا الآن؟ / Now'],
+  ['/experiences','استكشف / Explore'],
+  ['/price-check','الأسعار / Prices'],
+  ['/transport','النقل / Transport'],
+  ['/plan','خطتي / My Plan'],
 ] as const;
 
 export default function SiteNav(){
