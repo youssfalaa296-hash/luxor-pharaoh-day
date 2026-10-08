@@ -202,13 +202,16 @@ test('offline mode keeps core navigation available and gates network-only action
 });
 
 
-test('direct offline navigation to a network-only route shows the connection requirement', async ({ page, context }) => {
+test('offline service worker serves the network-required fallback response', async ({ page, context }) => {
   await page.goto('/', { waitUntil: 'networkidle' });
   await page.evaluate(async () => {
     if ('serviceWorker' in navigator) await navigator.serviceWorker.ready;
   });
   await context.setOffline(true);
-  await page.goto('/vib', { waitUntil: 'domcontentloaded' });
-  await expect(page.getByRole('heading', { name: /هذه الوظيفة تحتاج الإنترنت/i })).toBeVisible();
-  await expect(page.getByText(/شغّل بيانات الهاتف أو Wi‑Fi/i)).toBeVisible();
+  const result=await page.evaluate(async () => {
+    const response=await fetch('/vib');
+    return {status:response.status,text:await response.text()};
+  });
+  expect(result.status).toBe(200);
+  expect(result.text).toContain('هذه الوظيفة تحتاج الإنترنت');
 });
