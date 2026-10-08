@@ -8,11 +8,15 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: browser-qa-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   browser-qa:
     name: Chromium browser QA
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,8 +27,14 @@ jobs:
           node-version: 24.21.0
           cache: npm
 
-      - name: Setup npm
+      - name: Pin npm 11.19.0
         run: npm install --global npm@11.19.0
+
+      - name: Verify runtime
+        run: |
+          set -euo pipefail
+          test "$(node --version)" = "v24.21.0"
+          test "$(npm --version)" = "11.19.0"
 
       - name: Install dependencies
         run: npm ci
@@ -32,24 +42,40 @@ jobs:
       - name: Install Playwright Chromium
         run: npx --yes playwright@1.63.0 install --with-deps chromium
 
+      - name: Production build
+        run: |
+          set -o pipefail
+          npm run build 2>&1 | tee /tmp/luxor-build.log
+
       - name: Start production server
         run: |
-          npm run build
+          set -euo pipefail
           npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/luxor-next.log 2>&1 &
-          npx --yes wait-on@8.0.1 http://127.0.0.1:3000
+          echo $! > /tmp/luxor-next.pid
+          for i in {1..60}; do
+            if curl --fail --silent --show-error http://127.0.0.1:3000/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Production server failed to become ready."
+          cat /tmp/luxor-next.log
+          exit 1
 
       - name: Run browser QA
         env:
           BASE_URL: http://127.0.0.1:3000
+          CI: true
         run: npx --yes playwright@1.63.0 test
 
       - name: Upload browser evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: browser-qa-evidence
+          name: browser-qa-evidence-${{ github.sha }}
           path: |
             playwright-report/
             test-results/
+            /tmp/luxor-build.log
             /tmp/luxor-next.log
           if-no-files-found: ignore
