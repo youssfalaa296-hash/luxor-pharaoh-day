@@ -1,13 +1,13 @@
-'use client';
-
 import Link from 'next/link';
-import {useSearchParams} from 'next/navigation';
 import {findSearchItems} from '@/lib/search-index';
-import {trackEvent} from '@/lib/analytics';
 
-export default function SearchPage(){
-  const params=useSearchParams();
-  const query=params.get('q')||'';
+export default async function SearchPage({
+  searchParams,
+}: {
+  searchParams: Promise<{q?: string}>;
+}){
+  const params=await searchParams;
+  const query=params.q||'';
   const results=findSearchItems(query);
   return <main className="wrap page">
     <div className="eyebrow">SEARCH / بحث</div>
@@ -18,7 +18,7 @@ export default function SearchPage(){
         <span className="tag">{item.title}</span>
         <h2>{item.arabic}</h2>
         <p>{item.description}</p>
-        <Link className="btn alt" href={item.href} onClick={()=>trackEvent('search_result_opened',{intent:item.intent})}>فتح المسار →</Link>
+        <Link className="btn alt" href={item.href} data-analytics-event="search_result_opened" data-analytics-value={item.intent}>فتح المسار →</Link>
       </article>):<div className="notice">لم نجد نتيجة واضحة. جرّب: سعر، معالم، خطة، نقل، مشكلة، أو مساعدة.</div>}
     </div>
     <div className="actions"><Link className="btn alt" href="/">العودة للرئيسية</Link><Link className="btn alt" href="/what-can-i-do-now">ابدأ من احتياجك الآن</Link></div>
