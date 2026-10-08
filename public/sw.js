@@ -91,7 +91,6 @@ self.addEventListener('fetch', event => {
         })
         .catch(() => {
           if (networkOnly) {
-            const target=url.pathname+url.search;
             return caches.match(OFFLINE).then(cached => {
               if (!cached) return Response.error();
               const redirectUrl=new URL(OFFLINE,self.location.origin);
