@@ -8,6 +8,7 @@ const siteUrl=process.env.NEXT_PUBLIC_SITE_URL||'https://luxor-pharaoh-day-q3rd.
 const whatsapp='201012801568';
 const email='youssfalaa296@gmail.com';
 const instagram='https://www.instagram.com/luxor_quest/';
+const enableVercelTelemetry=process.env.VERCEL_ENV==='production';
 
 export const metadata:Metadata={
   metadataBase:new URL(siteUrl),
@@ -52,6 +53,6 @@ export default function RootLayout({children}:{children:React.ReactNode}){
         </div>
       </div>
     </footer>
-    <SpeedInsights/><Analytics/>
+    {enableVercelTelemetry && <><SpeedInsights/><Analytics/></>}
   </body></html>
 }
