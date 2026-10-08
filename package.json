@@ -15,8 +15,8 @@
     "typecheck": "tsc --noEmit",
     "verify:project": "node scripts/verify-project.mjs",
     "verify:lockfile": "node scripts/verify-lockfile.mjs",
-    "verify": "npm run lint && npm run typecheck",
-    "preflight": "npm run lint && npm run typecheck"
+    "verify": "npm run verify:project && npm run verify:lockfile && npm run lint && npm run typecheck",
+    "preflight": "npm run verify"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
