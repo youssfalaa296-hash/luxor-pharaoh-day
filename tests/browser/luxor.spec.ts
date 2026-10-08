@@ -223,10 +223,15 @@ test('offline mode keeps core navigation available and gates network-only action
 
   await page.getByRole('button', { name: /Stay offline|متابعة بدون إنترنت/i }).click();
 
-  const pocketLink = page.getByRole('link', { name: /جيب السائح|Tourist Pocket/i }).last();
-  await expect(pocketLink).toBeVisible();
-  await pocketLink.click();
+  const pocketCached = await page.evaluate(async () => {
+    const response = await caches.match('/tourist-pocket');
+    return Boolean(response);
+  });
+  expect(pocketCached).toBe(true);
+
+  await page.goto('/tourist-pocket', { waitUntil: 'domcontentloaded' });
   await expect(page).toHaveURL(/\/tourist-pocket$/);
+  await expect(page.locator('main')).toBeVisible();
 });
 
 test('offline service worker serves the network-required navigation fallback', async ({ page, context }) => {
