@@ -1,8 +1,9 @@
 'use client';
 
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useState, useSyncExternalStore} from 'react';
 
 type Step = {id:string; title:string; detail:string};
+type AcceptanceState = {checked:Record<string,boolean>; evidence:string};
 
 const steps: Step[] = [
   {id:'production',title:'Open Production',detail:'افتح رابط الإنتاج الحالي وتأكد أن النطاق هو Production وليس Preview.'},
@@ -21,15 +22,56 @@ const steps: Step[] = [
 ];
 
 const storageKey='luxor-pharaoh-day-production-acceptance-v1';
+const serverSnapshot: AcceptanceState = {checked:{}, evidence:''};
+let snapshot: AcceptanceState = serverSnapshot;
+const listeners = new Set<() => void>();
+
+function getSnapshot(){ return snapshot; }
+function getServerSnapshot(){ return serverSnapshot; }
+function subscribe(listener:()=>void){ listeners.add(listener); return ()=>listeners.delete(listener); }
+
+function readStoredState(): AcceptanceState {
+  if(typeof window==='undefined') return serverSnapshot;
+  try {
+    const raw=window.localStorage.getItem(storageKey);
+    if(!raw) return serverSnapshot;
+    const parsed=JSON.parse(raw);
+    return {
+      checked: parsed?.checked && typeof parsed.checked === 'object' ? parsed.checked : {},
+      evidence: typeof parsed?.evidence === 'string' ? parsed.evidence : '',
+    };
+  } catch {
+    return serverSnapshot;
+  }
+}
+
+function persist(next:AcceptanceState){
+  try {
+    window.localStorage.setItem(storageKey,JSON.stringify({...next,updatedAt:new Date().toISOString()}));
+  } catch {}
+}
+
+function publish(next:AcceptanceState){
+  snapshot=next;
+  persist(next);
+  listeners.forEach(listener=>listener());
+}
+
+function hydrate(){
+  const stored=readStoredState();
+  if(stored!==snapshot){
+    snapshot=stored;
+    listeners.forEach(listener=>listener());
+  }
+}
 
 export default function ProductionAcceptance(){
-  const [checked,setChecked]=useState<Record<string,boolean>>({});
-  const [evidence,setEvidence]=useState('');
+  const state=useSyncExternalStore(subscribe,getSnapshot,getServerSnapshot);
   const [copied,setCopied]=useState(false);
 
-  useEffect(()=>{try{const raw=localStorage.getItem(storageKey);if(raw){const p=JSON.parse(raw);setChecked(p.checked??{});setEvidence(p.evidence??'');}}catch{}},[]);
-  useEffect(()=>{try{localStorage.setItem(storageKey,JSON.stringify({checked,evidence,updatedAt:new Date().toISOString()}));}catch{}},[checked,evidence]);
+  useEffect(()=>{hydrate();},[]);
 
+  const {checked,evidence}=state;
   const completed=steps.filter(s=>checked[s.id]).length;
   const ready=completed===steps.length;
   const report=useMemo(()=>[
@@ -42,8 +84,13 @@ export default function ProductionAcceptance(){
     ...steps.map((s,i)=>(i+1)+'. ['+(checked[s.id]?'x':' ')+'] '+s.title+' — '+s.detail),
   ].join('\n'),[checked,completed,evidence,ready]);
 
-  async function copyReport(){try{await navigator.clipboard.writeText(report);setCopied(true);setTimeout(()=>setCopied(false),1600);}catch{}}
-  function reset(){setChecked({});setEvidence('');try{localStorage.removeItem(storageKey);}catch{}}
+  async function copyReport(){
+    try{await navigator.clipboard.writeText(report);setCopied(true);setTimeout(()=>setCopied(false),1600);}catch{}
+  }
+  function reset(){
+    try{window.localStorage.removeItem(storageKey);}catch{}
+    publish(serverSnapshot);
+  }
 
   return <section className="acceptance">
     <div className="acceptance-head"><div><div className="eyebrow">PRODUCTION ACCEPTANCE</div><h1>دليل المتصفح التفاعلي</h1><p className="sub">بوابة قبول تشغيلية لتوثيق الاختبار اليدوي النهائي. لا تغيّر بيانات الإنتاج ولا تمنح حالة VERIFIED تلقائيًا.</p></div><div className={'acceptance-status '+(ready?'ready':'')} aria-live="polite"><b>{ready?'READY FOR FINAL ACCEPTANCE':'INCOMPLETE'}</b><span>{completed}/{steps.length} مكتملة</span></div></div>
@@ -53,8 +100,8 @@ export default function ProductionAcceptance(){
       <button className="button" type="button" onClick={copyReport}>{copied?'تم النسخ ✓':'نسخ تقرير القبول'}</button>
       <button className="button danger" type="button" onClick={reset}>إعادة الاختبار</button>
     </div>
-    <div className="acceptance-list">{steps.map((step,index)=><label className={'acceptance-step '+(checked[step.id]?'done':'')} key={step.id}><input type="checkbox" checked={!!checked[step.id]} onChange={e=>setChecked(v=>({...v,[step.id]:e.target.checked}))}/><span className="acceptance-number">{index+1}</span><span><strong>{step.title}</strong><small>{step.detail}</small></span></label>)}</div>
-    <label className="evidence"><span>دليل/ملاحظات الاختبار (اختياري)</span><textarea value={evidence} onChange={e=>setEvidence(e.target.value)} placeholder="Chrome Android/Desktop، تاريخ الاختبار، ملاحظات أو رابط دليل..." rows={4}/></label>
+    <div className="acceptance-list">{steps.map((step,index)=><label className={'acceptance-step '+(checked[step.id]?'done':'')} key={step.id}><input type="checkbox" checked={!!checked[step.id]} onChange={e=>publish({...state,checked:{...checked,[step.id]:e.target.checked}})}/><span className="acceptance-number">{index+1}</span><span><strong>{step.title}</strong><small>{step.detail}</small></span></label>)}</div>
+    <label className="evidence"><span>دليل/ملاحظات الاختبار (اختياري)</span><textarea value={evidence} onChange={e=>publish({...state,evidence:e.target.value})} placeholder="Chrome Android/Desktop، تاريخ الاختبار، ملاحظات أو رابط دليل..." rows={4}/></label>
     <div className={'acceptance-final '+(ready?'ready':'')} aria-live="polite"><strong>{ready?'بوابة القبول اليدوي مكتملة.':'بوابة القبول اليدوي غير مكتملة.'}</strong><p>{ready?'يمكن الآن مقارنة الدليل مع CI + Vercel Production قبل اعتماد RELEASE_STATUS = VERIFIED.':'أكمل جميع الخطوات. يجب ألا تُعتمد VERIFIED قبل نجاح الاختبارات الآلية ووجود Deployment Production فعلي مطابق للمصدر.'}</p></div>
   </section>;
 }
