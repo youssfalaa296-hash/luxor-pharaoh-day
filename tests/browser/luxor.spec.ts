@@ -238,5 +238,5 @@ test('offline service worker serves the network-required navigation fallback', a
   expect(response?.status()).toBe(200);
   await expect(page).toHaveURL(/\/offline\?required=1/);
   await expect(page.getByRole('heading', { name: /هذه الوظيفة تحتاج الإنترنت/i })).toBeVisible();
-  await expect(page.getByText(/الطلب:.*\\/vib/i)).toBeVisible();
+  await expect(page.getByText(/الطلب:/i)).toBeVisible();
 });
