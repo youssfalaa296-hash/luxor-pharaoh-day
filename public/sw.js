@@ -1,1 +1,101 @@
-const CACHE='lpd-pocket-v1'; const CORE=['/','/tourist-pocket','/plan','/emergency','/rescue','/offline','/icon.svg']; self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))); self.addEventListener('activate',e=>e.waitUntil(self.clients.claim())); self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return; e.respondWith(fetch(e.request).then(r=>{if(r.ok){const copy=r.clone(); caches.open(CACHE).then(c=>c.put(e.request,copy));} return r;}).catch(()=>caches.match(e.request).then(r=>r||caches.match('/offline'))));});
+const CACHE='lpd-pocket-v2';
+const OFFLINE='/offline';
+const CORE=[
+  '/',
+  '/tourist-pocket',
+  '/plan',
+  '/what-can-i-do-now',
+  '/smart-day',
+  '/experiences',
+  '/price-check',
+  '/transport',
+  '/before-you-buy',
+  '/visitor-guide',
+  '/family-mode',
+  '/photo-mode',
+  '/night-plan',
+  '/emergency',
+  '/rescue',
+  '/help',
+  '/trust',
+  '/report-issue',
+  '/offline',
+  '/icon.svg',
+  '/manifest.webmanifest'
+];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE)
+      .then(cache => Promise.allSettled(CORE.map(url => cache.add(url))))
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key))))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('message', event => {
+  if (event.data?.type === 'CACHE_OFFLINE_PACK') {
+    event.waitUntil(
+      caches.open(CACHE)
+        .then(cache => Promise.allSettled(CORE.map(url => cache.add(url))))
+    );
+  }
+});
+
+self.addEventListener('fetch', event => {
+  const request = event.request;
+  if (request.method !== 'GET') return;
+
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then(cache => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request).then(cached => cached || caches.match(OFFLINE)))
+    );
+    return;
+  }
+
+  if (url.pathname.startsWith('/_next/static/')) {
+    event.respondWith(
+      caches.match(request).then(cached =>
+        cached ||
+        fetch(request).then(response => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then(cache => cache.put(request, copy));
+          }
+          return response;
+        })
+      )
+    );
+    return;
+  }
+
+  event.respondWith(
+    fetch(request)
+      .then(response => {
+        if (response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE).then(cache => cache.put(request, copy));
+        }
+        return response;
+      })
+      .catch(() => caches.match(request).then(cached => cached || caches.match(OFFLINE)))
+  );
+});
