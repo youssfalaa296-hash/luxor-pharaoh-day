@@ -1,28 +1,5 @@
 'use client';
-
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
-
-const links=[
-  ['/visitor-center','مركز الزائر / Visitor Center'],
-  ['/what-can-i-do-now','ماذا الآن؟ / Now'],
-  ['/experiences','استكشف / Explore'],
-  ['/price-check','الأسعار / Prices'],
-  ['/transport','النقل / Transport'],
-  ['/plan','خطتي / My Plan'],
-] as const;
-
-export default function SiteNav(){
-  const pathname=usePathname();
-  return <>
-    <a className="skip" href="#main-content">تخطي إلى المحتوى / Skip to content</a>
-    <header className="nav">
-      <div className="wrap navin">
-        <Link className="brand" href="/" aria-label="LUXOR PHARAOH DAY home">LUXOR PHARAOH DAY 🏺👑</Link>
-        <nav className="links" aria-label="Primary navigation">
-          {links.map(([href,label])=><Link key={href} href={href} aria-current={pathname===href?'page':undefined}>{label}</Link>)}
-        </nav>
-      </div>
-    </header>
-  </>;
-}
+const links=[['/visitor-center','مركز الزائر / Visitor Center'],['/what-can-i-do-now','ماذا الآن؟ / Now'],['/experiences','استكشف / Explore'],['/price-check','الأسعار / Prices'],['/transport','النقل / Transport'],['/plan','خطتي / My Plan']] as const;
+export default function SiteNav(){const pathname=usePathname();return <><a className="skip" href="#main-content">تخطي إلى المحتوى / Skip to content</a><header className="nav"><div className="wrap navin"><Link className="brand" href="/" aria-label="LUXOR PHARAOH DAY home">LUXOR PHARAOH DAY 🏺👑</Link><nav className="links" aria-label="Primary navigation">{links.map(([href,label])=><Link key={href} href={href} aria-current={pathname===href?'page':undefined}>{label}</Link>)}</nav></div></header></>}
