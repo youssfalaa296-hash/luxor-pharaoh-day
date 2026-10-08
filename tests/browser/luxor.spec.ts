@@ -16,6 +16,7 @@ const routes = [
   '/terms',
   '/advanced',
   '/contact',
+  '/production-qa',
 ];
 
 for (const route of routes) {
@@ -90,4 +91,18 @@ test('contact channels expose project-only contact details', async ({ page }) =>
   await page.goto('/contact', { waitUntil: 'networkidle' });
   await expect(page.getByText('01012801568')).toBeVisible();
   await expect(page.getByText('youssfalaa296@gmail.com')).toBeVisible();
+});
+
+
+test('production acceptance gate persists checklist state and blocks false VERIFIED', async ({ page }) => {
+  await page.goto('/production-qa', { waitUntil: 'networkidle' });
+  await expect(page.getByRole('heading', { name: /دليل المتصفح التفاعلي/i })).toBeVisible();
+  await expect(page.getByText(/INCOMPLETE/)).toBeVisible();
+
+  const first = page.locator('.acceptance-step input').first();
+  await first.check();
+  await expect(first).toBeChecked();
+  await page.reload({ waitUntil: 'networkidle' });
+  await expect(first).toBeChecked();
+  await expect(page.getByText(/VERIFIED/)).toBeVisible();
 });
