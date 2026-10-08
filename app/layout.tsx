@@ -15,7 +15,7 @@ export const metadata:Metadata={
   alternates:{canonical:siteUrl},
   openGraph:{type:'website',url:siteUrl,title:'LUXOR PHARAOH DAY 🏺👑',description:'اعرف • اتأكد • اتحرك — A Day in Luxor with the Pharaohs',siteName:'LUXOR PHARAOH DAY'},
   twitter:{card:'summary_large_image',title:'LUXOR PHARAOH DAY 🏺👑',description:'اعرف • اتأكد • اتحرك — A Day in Luxor with the Pharaohs'},
-  robots:{index:true,follow:true},
+  robots:{index:process.env.VERCEL_ENV==='production',follow:true},
   icons:{icon:'/icon.svg',apple:'/icon.svg'}
 };
 
