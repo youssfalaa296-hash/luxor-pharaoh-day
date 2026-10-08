@@ -15,6 +15,8 @@ const links=[
   ['/rescue','إنقاذ / Rescue'],
 ] as const;
 
+const networkOnly=new Set(['/vib','/visitor-center']);
+
 const bottomLinks=[
   ['/','الرئيسية','Home','⌂'],
   ['/experiences','استكشف','Explore','⌕'],
@@ -34,14 +36,14 @@ export default function SiteNav(){
           <span><b>LUXOR PHARAOH DAY</b><small>يومك في الأقصر / Your Day in Luxor</small></span>
         </Link>
         <nav className="links" aria-label="Primary navigation">
-          {links.map(([href,label])=><Link key={href} href={href} aria-current={pathname===href?'page':undefined}>{label}</Link>)}
+          {links.map(([href,label])=><Link key={href} href={href} data-requires-network={networkOnly.has(href)?'true':undefined} aria-current={pathname===href?'page':undefined}>{label}</Link>)}
         </nav>
         <Link className="nav-quick" href="/what-can-i-do-now">ابدأ الآن<br/><span>Start Now</span></Link>
       </div>
     </header>
     <nav className="bottom-nav" aria-label="App navigation">
       {bottomLinks.map(([href,ar,en,icon])=>
-        <Link key={href} href={href} className={pathname===href?'active':''} aria-current={pathname===href?'page':undefined}>
+        <Link key={href} href={href} data-requires-network={networkOnly.has(href)?'true':undefined} className={pathname===href?'active':''} aria-current={pathname===href?'page':undefined}>
           <span className="bottom-icon" aria-hidden="true">{icon}</span>
           <span>{ar}</span><small>{en}</small>
         </Link>
