@@ -1,5 +1,6 @@
-const CACHE='lpd-pocket-v2';
+const CACHE='lpd-pocket-v3';
 const OFFLINE='/offline';
+
 const CORE=[
   '/',
   '/tourist-pocket',
@@ -23,6 +24,18 @@ const CORE=[
   '/icon.svg',
   '/manifest.webmanifest'
 ];
+
+const NETWORK_REQUIRED=[
+  '/live-now',
+  '/vib',
+  '/contact',
+  '/report-issue',
+  '/advanced',
+  '/admin',
+  '/soundtrack'
+];
+
+const isNetworkRequired=(pathname)=>NETWORK_REQUIRED.some(route=>pathname===route || pathname.startsWith(route+'/'));
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -57,16 +70,30 @@ self.addEventListener('fetch', event => {
   if (url.origin !== self.location.origin) return;
 
   if (request.mode === 'navigate') {
+    const networkOnly=isNetworkRequired(url.pathname);
+
     event.respondWith(
       fetch(request)
         .then(response => {
-          if (response.ok) {
+          if (response.ok && !networkOnly) {
             const copy = response.clone();
             caches.open(CACHE).then(cache => cache.put(request, copy));
           }
           return response;
         })
-        .catch(() => caches.match(request).then(cached => cached || caches.match(OFFLINE)))
+        .catch(() => {
+          if (networkOnly) {
+            const target=url.pathname+url.search;
+            return caches.match(OFFLINE).then(cached => {
+              if (!cached) return Response.error();
+              const redirectUrl=new URL(OFFLINE,self.location.origin);
+              redirectUrl.searchParams.set('required','1');
+              redirectUrl.searchParams.set('target',target);
+              return fetch(redirectUrl).catch(()=>cached);
+            });
+          }
+          return caches.match(request).then(cached => cached || caches.match(OFFLINE));
+        })
     );
     return;
   }
