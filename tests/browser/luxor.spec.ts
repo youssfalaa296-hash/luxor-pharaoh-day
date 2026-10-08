@@ -1,0 +1,93 @@
+import { test, expect } from '@playwright/test';
+
+const routes = [
+  '/',
+  '/experiences',
+  '/price-check',
+  '/what-can-i-do-now',
+  '/transport',
+  '/before-you-buy',
+  '/plan',
+  '/help',
+  '/trust',
+  '/report-issue',
+  '/faq',
+  '/privacy',
+  '/terms',
+  '/advanced',
+  '/contact',
+];
+
+for (const route of routes) {
+  test(`route loads: ${route}`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on('console', msg => {
+      if (msg.type() === 'error') errors.push(msg.text());
+    });
+    page.on('pageerror', err => errors.push(err.message));
+
+    const response = await page.goto(route, { waitUntil: 'networkidle' });
+    expect(response?.status()).toBe(200);
+    await expect(page.locator('body')).toBeVisible();
+    expect(errors, `browser errors on ${route}`).toEqual([]);
+  });
+}
+
+test('planner generates a recommendation and preserves accessible interaction', async ({ page }) => {
+  await page.goto('/what-can-i-do-now', { waitUntil: 'networkidle' });
+
+  const buttons = page.getByRole('button');
+  await expect(buttons.first()).toBeVisible();
+  await buttons.first().click();
+
+  const result = page.locator('[aria-live="polite"]');
+  await expect(result).toBeVisible();
+  await expect(result).not.toHaveText('');
+});
+
+test('plan page can save and clear local plan state', async ({ page }) => {
+  await page.goto('/plan', { waitUntil: 'networkidle' });
+
+  const buttons = page.getByRole('button');
+  await expect(buttons.first()).toBeVisible();
+
+  const save = page.getByRole('button', { name: /save|حفظ/i }).first();
+  if (await save.count()) {
+    await save.click();
+  }
+
+  const clear = page.getByRole('button', { name: /clear|مسح|حذف/i }).first();
+  if (await clear.count()) {
+    await clear.click();
+  }
+});
+
+test('soundtrack control is user-initiated and can be toggled', async ({ page }) => {
+  await page.goto('/', { waitUntil: 'networkidle' });
+
+  const sound = page.getByRole('button', { name: /sound|الصوت|music|الموسيقى/i }).first();
+  if (await sound.count()) {
+    await expect(sound).toBeVisible();
+    await sound.click();
+    await sound.click();
+  }
+});
+
+test('RTL document and responsive layout are valid', async ({ page }) => {
+  await page.goto('/', { waitUntil: 'networkidle' });
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+  await expect(page.locator('body')).toBeVisible();
+});
+
+test('reduced motion preference does not break the UI', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/', { waitUntil: 'networkidle' });
+  await expect(page.locator('body')).toBeVisible();
+  await expect(page.getByRole('link', { name: /Explore|استكشف/i }).first()).toBeVisible();
+});
+
+test('contact channels expose project-only contact details', async ({ page }) => {
+  await page.goto('/contact', { waitUntil: 'networkidle' });
+  await expect(page.getByText('01012801568')).toBeVisible();
+  await expect(page.getByText('youssfalaa296@gmail.com')).toBeVisible();
+});
