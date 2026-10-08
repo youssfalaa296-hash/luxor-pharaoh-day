@@ -1,1 +1,17 @@
-import fs from 'node:fs';\nconst sites=JSON.parse(fs.readFileSync('data/official-sites.json','utf8'));\nconst maxAgeDays=14;\nconst now=Date.now();\nconst stale=sites.filter(s=>{const t=Date.parse(s.lastReviewed); return !Number.isFinite(t)||((now-t)/86400000)>maxAgeDays;});\nconsole.log(JSON.stringify({total:sites.length,stale:stale.map(s=>({id:s.id,lastReviewed:s.lastReviewed})),maxAgeDays},null,2));\nif(stale.length) process.exitCode=1;
+import fs from 'node:fs';
+
+const sites = JSON.parse(fs.readFileSync('data/official-sites.json', 'utf8'));
+const maxAgeDays = 14;
+const now = Date.now();
+const stale = sites.filter((s) => {
+  const t = Date.parse(s.lastReviewed);
+  return !Number.isFinite(t) || ((now - t) / 86400000) > maxAgeDays;
+});
+
+console.log(JSON.stringify({
+  total: sites.length,
+  stale: stale.map((s) => ({ id: s.id, lastReviewed: s.lastReviewed })),
+  maxAgeDays,
+}, null, 2));
+
+if (stale.length) process.exitCode = 1;
