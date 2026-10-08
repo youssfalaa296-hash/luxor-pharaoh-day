@@ -18,6 +18,7 @@ const routes = [
   '/contact',
   '/production-qa',
   '/visitor-center',
+  '/rescue',
   '/visitor-guide',
   '/emergency',
   '/vib',
@@ -136,4 +137,12 @@ test('immersive atmosphere respects user controls and soundtrack guide is reacha
   await motion.click();
   await motion.click();
   await expect(page.getByRole('link', { name: /اختيار الموسيقى/i })).toBeVisible();
+});
+
+
+test('Pharaoh Rescue recovery center provides safe decision paths', async ({ page }) => {
+  await page.goto('/rescue', { waitUntil: 'networkidle' });
+  await expect(page.getByRole('heading', { name: /إنقاذ الرحلة/i })).toBeVisible();
+  await expect(page.getByText(/RECOVERY FLOW/i)).toBeVisible();
+  await expect(page.getByRole('link', { name: /طوارئ \/ Emergency/i })).toBeVisible();
 });
