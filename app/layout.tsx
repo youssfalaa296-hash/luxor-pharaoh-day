@@ -3,6 +3,7 @@ import {SpeedInsights} from '@vercel/speed-insights/next';
 import {Analytics} from '@vercel/analytics/next';
 import SiteNav from '@/components/SiteNav';
 import AtmosphereLayer from '@/components/AtmosphereLayer';
+import OfflineRegister from '@/components/OfflineRegister';
 import './globals.css';
 
 const siteUrl=process.env.NEXT_PUBLIC_SITE_URL||'https://luxor-pharaoh-day-q3rd.vercel.app';
@@ -37,7 +38,7 @@ const structuredData={
 
 export default function RootLayout({children}:{children:React.ReactNode}){
   return <html lang="ar" dir="rtl"><body>
-    <AtmosphereLayer/>
+    <OfflineRegister/><AtmosphereLayer/>
     <SiteNav/>
     <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structuredData)}} />
     <div id="main-content" className="app-content">{children}</div>
