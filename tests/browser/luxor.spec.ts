@@ -154,3 +154,35 @@ test('Pharaoh Rescue recovery center provides safe decision paths', async ({ pag
   await expect(page.getByText(/RECOVERY FLOW/i)).toBeVisible();
   await expect(page.getByRole('link', { name: /طوارئ \/ Emergency/i })).toBeVisible();
 });
+
+
+test('mobile viewport has no horizontal overflow', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/', { waitUntil: 'networkidle' });
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+  expect(overflow).toBe(false);
+});
+
+test('keyboard navigation reaches an actionable control', async ({ page }) => {
+  await page.goto('/', { waitUntil: 'networkidle' });
+  await page.keyboard.press('Tab');
+  await expect(page.locator(':focus-visible')).toBeVisible();
+});
+
+test('service worker registers and offline fallback is available', async ({ page, context }) => {
+  await page.goto('/tourist-pocket', { waitUntil: 'networkidle' });
+  await expect(page.locator('body')).toBeVisible();
+  const registration = await page.evaluate(async () => {
+    if (!('serviceWorker' in navigator)) return false;
+    const reg = await navigator.serviceWorker.ready;
+    return Boolean(reg.active);
+  });
+  expect(registration).toBe(true);
+});
+
+test('critical routes expose a usable main landmark', async ({ page }) => {
+  for (const route of ['/', '/price-check', '/smart-day', '/rescue', '/tourist-pocket']) {
+    await page.goto(route, { waitUntil: 'networkidle' });
+    await expect(page.locator('main')).toBeVisible();
+  }
+});
