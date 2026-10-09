@@ -10,7 +10,7 @@ import './globals.css';
 
 const siteUrl=process.env.NEXT_PUBLIC_SITE_URL||'https://luxor-pharaoh-day.vercel.app';
 const whatsapp='201012801568';
-const email='luxor.pharaohday@gmail.com';
+const email='luxor-pharaohday@gmail.com';
 const instagram='https://www.instagram.com/luxor_quest/';
 const enableVercelTelemetry=process.env.VERCEL_ENV==='production';
 
