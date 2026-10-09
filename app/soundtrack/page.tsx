@@ -1,5 +1,37 @@
 import Link from 'next/link';
 
-const moods=[['🏺','Pharaoh Cinematic','موسيقى سينمائية عالمية، أوركسترا هادئة، أصوات صحراوية خفيفة — مناسبة للاكتشاف والغروب.'],['🌍','Global Travel Pulse','Afro-house / organic house / downtempo — إيقاع عالمي مريح للحركة والليل.'],['🌙','Nile Night','Ambient / chill / melodic electronic — مناسبة للمساء والهدوء.'],['⚡','Adventure Mode','Cinematic electronic / progressive — مناسبة للحركة والمغامرة بدون إزعاج المحتوى.'],['🇪🇬','Egyptian Modern','Arabic electronic / Egyptian fusion — هوية محلية مع إنتاج عصري.']];
+const moods=[
+  {icon:'🏺',title:'Pharaoh Cinematic',desc:'موسيقى سينمائية وأوركسترا هادئة وأجواء صحراوية — مناسبة للاكتشاف والغروب.',search:'cinematic egyptian instrumental travel'},
+  {icon:'🌍',title:'Global Travel Pulse',desc:'Organic house وAfro-house وdowntempo بإيقاع عالمي مريح للحركة.',search:'organic house afro house travel mix'},
+  {icon:'🌙',title:'Nile Night',desc:'Ambient وchill وmelodic electronic لأجواء النيل والمساء.',search:'ambient chill melodic electronic night'},
+  {icon:'⚡',title:'Adventure Mode',desc:'موسيقى سينمائية إلكترونية بطاقة أعلى للمغامرة والتحرك.',search:'cinematic electronic adventure instrumental'},
+  {icon:'🇪🇬',title:'Egyptian Modern',desc:'مزيج عربي وإلكتروني حديث يحافظ على الهوية المحلية.',search:'modern egyptian instrumental electronic fusion'}
+];
 
-export default function Soundtrack(){return <main className="wrap page"><div className="eyebrow">SOUNDTRACK · أجواء الرحلة</div><h1>الموسيقى جزء من التجربة — لكن بشكل قانوني واحترافي</h1><p className="lead">اختر المزاج، وليس أغنية واحدة فقط. داخل التطبيق نستخدم Atmosphere Mode بصوت مولّد محليًا. أما التسجيلات التجارية العالمية فتُفتح عبر منصة مرخّصة للمستخدم، ولا يتم نسخها أو بثها داخل الموقع.</p><div className="grid visitor-grid">{moods.map(([icon,title,desc])=><article className="card" key={title}><span className="visitor-icon" aria-hidden="true">{icon}</span><h2>{title}</h2><p>{desc}</p></article>)}</div><div className="notice"><b>القاعدة:</b> لا يتم تخزين أو بث تسجيلات تجارية داخل المنصة. أي خدمة موسيقية خارجية يجب أن تلتزم بشروطها وترخيصها، ويظل التشغيل بقرار المستخدم.</div><div className="actions"><Link className="btn" href="/">رجوع للتجربة / Back Home</Link><Link className="btn alt" href="/vib">VIB Desk</Link></div></main>}
+const services=[
+  {name:'Spotify',label:'افتح على Spotify',url:(q:string)=>`https://open.spotify.com/search/${encodeURIComponent(q)}`},
+  {name:'YouTube Music',label:'افتح على YouTube Music',url:(q:string)=>`https://music.youtube.com/search?q=${encodeURIComponent(q)}`},
+  {name:'Apple Music',label:'افتح على Apple Music',url:(q:string)=>`https://music.apple.com/search?term=${encodeURIComponent(q)}`},
+  {name:'Anghami',label:'افتح على Anghami',url:(q:string)=>`https://play.anghami.com/search/${encodeURIComponent(q)}`}
+];
+
+export default function Soundtrack(){
+  return <main className="wrap page soundtrack-page">
+    <div className="eyebrow">SOUNDTRACK · أجواء الرحلة</div>
+    <h1>خلّي للأقصر صوتها الخاص</h1>
+    <p className="lead">اختار المزاج المناسب لرحلتك، وافتح نتائج الموسيقى على المنصة التي تستخدمها. التشغيل اختياري وبقرارك، ولا يبدأ أي صوت تلقائيًا.</p>
+    <div className="soundtrack-intro">
+      <span className="soundtrack-art" aria-hidden="true">𓂀</span>
+      <div><b>Atmosphere Mode</b><p>أجواء صوتية أصلية مولّدة داخل جهازك، من غير ملفات موسيقية تجارية مضمّنة. ارجع للرئيسية لتشغيلها أو إيقافها.</p><Link className="btn alt" href="/">العودة للتجربة وتشغيل الأجواء / Back to app</Link></div>
+    </div>
+    <div className="grid visitor-grid soundtrack-grid">
+      {moods.map((mood)=><article className="card soundtrack-card" key={mood.title}>
+        <span className="visitor-icon soundtrack-icon" aria-hidden="true">{mood.icon}</span>
+        <h2>{mood.title}</h2><p>{mood.desc}</p>
+        <div className="soundtrack-links">{services.map(service=><a key={service.name} href={service.url(mood.search)} target="_blank" rel="noopener noreferrer">{service.label} ↗</a>)}</div>
+      </article>)}
+    </div>
+    <div className="notice"><b>حقوق الموسيقى:</b> لا نضمّن أغاني تجارية محمية أو نعيد بثها داخل التطبيق. الروابط تفتح نتائج بحث على خدمات خارجية؛ التوفر والتشغيل يخضعان لحساب المستخدم والمنطقة وشروط كل خدمة. استخدم فقط موسيقى مرخّصة إذا أردت إدماجها داخل التطبيق مستقبلًا.</div>
+    <div className="actions"><Link className="btn" href="/">رجوع للرئيسية / Home</Link><Link className="btn alt" href="/vib">مساعد الرحلة / VIB Desk</Link></div>
+  </main>
+}
