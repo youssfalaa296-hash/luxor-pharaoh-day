@@ -1,11 +1,10 @@
 import type {Metadata} from 'next';
-import {SpeedInsights} from '@vercel/speed-insights/next';
-import {Analytics} from '@vercel/analytics/next';
 import SiteNav from '@/components/SiteNav';
 import AtmosphereLayer from '@/components/AtmosphereLayer';
 import OfflineRegister from '@/components/OfflineRegister';
 import NetworkStatus from '@/components/NetworkStatus';
 import AnalyticsTelemetry from '@/components/AnalyticsTelemetry';
+import VercelTelemetry from '@/components/VercelTelemetry';
 import './globals.css';
 
 const siteUrl=process.env.NEXT_PUBLIC_SITE_URL||'https://luxor-pharaoh-day.vercel.app';
@@ -58,6 +57,6 @@ export default function RootLayout({children}:{children:React.ReactNode}){
         </div>
       </div>
     </footer>
-    {enableVercelTelemetry && <><SpeedInsights/><Analytics beforeSend={event=>event.url.includes('/admin')?null:event}/></>}
+    {enableVercelTelemetry && <VercelTelemetry/>}
   </body></html>
 }
