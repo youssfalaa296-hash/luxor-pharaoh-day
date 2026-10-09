@@ -131,7 +131,7 @@ export default function LiveQuestPage() {
 
         <div className="grid">
           <article className="card"><span className="tag">PLANNED TIME</span><h3>{plan.totalMinutes} دقيقة</h3><p>وقت الزيارة وفواصل انتقال تقديرية.</p></article>
-          <article className="card"><span className="tag">TICKET TOTAL</span><h3>{plan.totalTicketEgp} ج.م</h3><p>إجمالي التذاكر وفق الفئة المختارة وبيانات الأسعار الحالية بالمشروع.</p></article>
+          <article className="card"><span className="tag">TICKET TOTAL</span><h3>{plan.totalTicketEgp} ج.م</h3><p>إجمالي تخطيطي من بيانات المشروع؛ ليس سعرًا حيًا مؤكدًا.</p></article>
           <article className="card"><span className="tag">BUDGET LEFT</span><h3>{plan.remainingBudgetEgp} ج.م</h3><p>المتبقي من ميزانية التذاكر فقط، وليس كامل مصروفات اليوم.</p></article>
         </div>
 
@@ -163,7 +163,7 @@ export default function LiveQuestPage() {
           <strong>مهم قبل التحرك:</strong>
           <ul>{plan.notices.map((notice) => <li key={notice}>{notice}</li>)}</ul>
         </div>
-        <p className="sub">تقدم الزيارة يُحفظ محليًا على هذا الجهاز فقط. <Link href="/price-check">راجع الأسعار</Link> · <Link href="/transport">راجع خيارات التنقل</Link> · <Link href="/report-issue">أبلغ عن معلومة خاطئة</Link>.</p>
+        <p className="sub">تقدم الزيارة يُحفظ محليًا على هذا الجهاز فقط. <Link href="/price-check">راجع الأسعار</Link> · <a href="https://mota.gov.eg/ar/الخدمات-الرقمية/المواقع-الأثرية-والمتاحف/شراء-تذاكر-الزيارة/شراء-تذاكر-الزيارة/" target="_blank" rel="noreferrer">بوابة التذاكر الرسمية ↗</a> · <Link href="/transport">راجع خيارات التنقل</Link> · <Link href="/report-issue">أبلغ عن معلومة خاطئة</Link>.</p>
       </section>
     </main>
   );
