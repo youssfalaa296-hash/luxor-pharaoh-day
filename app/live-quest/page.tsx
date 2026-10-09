@@ -18,18 +18,22 @@ export default function LiveQuestPage() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved) as { completedIds?: string[]; skippedIds?: string[] };
-        setCompletedIds(Array.isArray(parsed.completedIds) ? parsed.completedIds : []);
-        setSkippedIds(Array.isArray(parsed.skippedIds) ? parsed.skippedIds : []);
+    // Defer hydration state updates until after the effect body to avoid cascading renders.
+    const timer = window.setTimeout(() => {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved) as { completedIds?: string[]; skippedIds?: string[] };
+          setCompletedIds(Array.isArray(parsed.completedIds) ? parsed.completedIds : []);
+          setSkippedIds(Array.isArray(parsed.skippedIds) ? parsed.skippedIds : []);
+        }
+      } catch {
+        // Invalid local progress is ignored; the planner remains usable.
+      } finally {
+        setReady(true);
       }
-    } catch {
-      // Invalid local progress is ignored; the planner remains usable.
-    } finally {
-      setReady(true);
-    }
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
