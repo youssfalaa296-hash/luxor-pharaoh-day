@@ -8,9 +8,9 @@
 KNOW → CHECK → GO → ADAPT → GET HELP / اعرف → اتأكد → اتحرك → اتصرف → اطلب المساعدة
 
 ## Current release gate
-**RELEASE_STATUS: READY_FOR_RELEASE**
+**RELEASE_STATUS: PRODUCTION_CANDIDATE — VERIFICATION_REQUIRED**
 
-Automated source, security, build, deployment, HTTP route, SEO, PWA, and runtime checks have passed. The release is intentionally not marked VERIFIED until final real-browser visual and interaction QA is completed.
+Read-only audit on 2026-10-10 found mixed Vercel commit statuses: some deployment checks succeeded, while other Vercel checks failed and one remained pending. These status records do not establish that the current commit has passed a complete production build and acceptance run. Do not mark this release READY_FOR_RELEASE or VERIFIED until the active deployment target is identified, the relevant CI/build checks are green, and browser QA is recorded.
 
 ## Production
 Vercel project: luxor-pharaoh-day-q3rd
