@@ -4,18 +4,29 @@ Last audited: 2026-10-10
 
 Current state: **Production Candidate — Verification Required**
 
-## Evidence recorded
+## Source and release identity
 
-- Source branch: `main`.
-- Audited commit: `9194aa6c1558b0a47f4d33ec177ba4ef568d01de`.
-- `package.json` declares Luxor Pharaoh Day v5.3.1, Node.js 24.x, npm >=11 <12, and npm@11.19.0.
-- A committed `package-lock.json` exists.
-- `vercel.json` uses `npm ci` and `npm run build`.
-- The latest combined commit status contains both successful and failed Vercel checks, plus a pending deployment status. This is mixed evidence, not a clean release gate.
-- Real-browser acceptance testing is not established by this source audit.
+- Audited default-branch commit: `9194aa6c1558b0a47f4d33ec177ba4ef568d01de`.
+- Review branch: `audit/separation-readiness-2026-10-10`.
+- Package identity: Luxor Pharaoh Day v5.3.1; Node.js 24.x; npm@11.19.0; committed `package-lock.json`.
+- Vercel project: `luxor-pharaoh-day`.
+- Verified project domain: `https://luxor-pharaoh-day.vercel.app`.
+
+## Findings and corrections in review branch
+
+- The latest inspected Vercel production deployment failed during prerender of `/_not-found`. The build log reported a function-serialization error involving the Analytics `beforeSend` callback.
+- `components/VercelTelemetry.tsx` was changed to remove that callback and suppress telemetry on `/admin` routes using pathname handling.
+- Canonical-origin defaults were aligned across `.env.example`, `app/layout.tsx`, `app/sitemap.ts`, and `public/robots.txt` with the verified project domain.
+- `README.md` and this file no longer claim release readiness without evidence.
+- A new Vercel preview deployment could not be created because Vercel returned a daily deployment API limit error (retry after 24 hours).
+
+## Verification status
+
+- GitHub Actions for the telemetry/canonical-fix review branch must finish; do not infer a pass while the run is in progress.
+- A successful Vercel build of the corrected source has not yet been obtained.
+- Production HTTP/browser QA and route-by-route acceptance checks have not been completed.
+- No files were deleted, no production aliases were changed, and no secrets or production environment variables were modified.
 
 ## Release decision
 
-Do not label the current source `READY_FOR_RELEASE` or `VERIFIED` solely from repository metadata. First identify the authoritative Vercel production project and deployment, obtain green CI/build results for the audited commit, run route/runtime checks, and complete Android Chrome and desktop Chrome interaction QA. Record evidence and deployment identifiers before upgrading the release status.
-
-No production data, secrets, deployment settings, or source files were changed by the read-only audit.
+Keep the release state at **Production Candidate — Verification Required**. Do not mark `READY_FOR_RELEASE`, `VERIFIED`, or `RELEASED` until GitHub CI passes for the final review-branch commit, Vercel can build the corrected source successfully, and the actual production domain passes mobile/desktop browser and runtime checks. Record deployment IDs and test evidence before changing this status.
