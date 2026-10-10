@@ -1,6 +1,6 @@
 import type {MetadataRoute} from 'next';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://luxor-pharaoh-day-q3rd.vercel.app';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://luxor-pharaoh-day.vercel.app';
 
 const paths = [
   '/', '/search', '/visitor-center', '/rescue', '/vib', '/live-now',
