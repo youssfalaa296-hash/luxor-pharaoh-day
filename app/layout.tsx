@@ -7,7 +7,7 @@ import AnalyticsTelemetry from '@/components/AnalyticsTelemetry';
 import VercelTelemetry from '@/components/VercelTelemetry';
 import './globals.css';
 
-const siteUrl=process.env.NEXT_PUBLIC_SITE_URL||'https://luxor-pharaoh-day.vercel.app';
+const siteUrl=process.env.NEXT_PUBLIC_SITE_URL||'https://luxor-pharaoh-day-q3rd.vercel.app';
 const whatsapp='201012801568';
 const email='luxor-pharaohday@gmail.com';
 const instagram='https://www.instagram.com/luxor_quest/';

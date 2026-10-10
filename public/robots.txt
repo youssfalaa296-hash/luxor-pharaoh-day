@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://luxor-pharaoh-day.vercel.app/sitemap.xml
+Sitemap: https://luxor-pharaoh-day-q3rd.vercel.app/sitemap.xml
