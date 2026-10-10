@@ -61,3 +61,67 @@ jobs:
 
       - name: Production build
         run: npm run build
+
+  browser-qa:
+    name: Browser QA — Chromium desktop and mobile
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js 24.21.0
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24.21.0
+          cache: npm
+
+      - name: Pin npm 11.19.0
+        run: npm install --global npm@11.19.0
+
+      - name: Verify runtime
+        run: |
+          set -euo pipefail
+          test "$(node --version)" = "v24.21.0"
+          test "$(npm --version)" = "11.19.0"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium and system dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: Build production application
+        run: npm run build
+
+      - name: Start production server
+        run: |
+          set -euo pipefail
+          npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/luxor-next.log 2>&1 &
+          echo $! > /tmp/luxor-next.pid
+          for i in {1..60}; do
+            if curl --fail --silent http://127.0.0.1:3000/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/luxor-next.log
+          exit 1
+
+      - name: Run browser acceptance tests
+        env:
+          BASE_URL: http://127.0.0.1:3000
+          CI: true
+        run: npx playwright test --reporter=line --timeout=20000 --global-timeout=600000
+
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-qa-evidence-${{ github.sha }}
+          path: |
+            playwright-report/
+            test-results/
+            /tmp/luxor-next.log
+          if-no-files-found: ignore
